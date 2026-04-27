@@ -1,0 +1,9 @@
+
+
+====environment setup =====
+equal hobe PORT = 5000 not PORT: 5000
+require korte hobe
+cors - port dynamic korte use hoi...
+
+
+
