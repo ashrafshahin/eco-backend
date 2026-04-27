@@ -1,4 +1,21 @@
 
+==== render.com live link  ========
+https://eco-backend-w57i.onrender.com/
+
+render.com first deploy.
+https://render.com/docs/your-first-deploy => 
+
+if not working...?
+if you see any problem render not giving - go to 'configure with github'
+
+- select All repository 
+- select your project 
+- .env file PORT and Database credentials will be given
+- press Deploy...
+- save your link when it says LIVE...
+
+====== xxx =======
+
 
 ====environment setup =====
 equal hobe PORT = 5000 not PORT: 5000
