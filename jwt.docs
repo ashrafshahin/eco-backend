@@ -1,4 +1,4 @@
-=== JSON WEB TOKEN ==== Ananlysis ===
+=== JSON WEB TOKEN ==== Ananlysis Details here ===
 
 Request → Middleware check → (Pass হলে) Route → Response
 
@@ -109,3 +109,7 @@ router.get("/orders", verifyToken, (req, res) => {
     userId: req.user.userId
   });
 });
+
+
+note:
+json web token related study - jwt.sign() token banano holo, then middleware e jabe check hobe, jwt.verrify() korbe headers theke token verify korar por, decode kore next() e pathai debe, then api route e jekhane check dete chao bosai dete hobe... Roll have some detailed work too... Coming soon...
