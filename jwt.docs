@@ -1,0 +1,111 @@
+=== JSON WEB TOKEN ==== Ananlysis ===
+
+Request → Middleware check → (Pass হলে) Route → Response
+
+[ Client (Browser / App) ]
+            |
+            | 1. Login Request (username, password)
+            v
+[ Server (/auth/login route) ]
+            |
+            | 2. Check credentials
+            | 3. Generate JWT
+            v
+[ Token Returned to Client ]
+            |
+            | 4. Client stores token (localStorage / cookie)
+            |
+            | 5. Request to Protected Route
+            |    (Authorization: Bearer TOKEN)
+            v
+[ Middleware (verifyToken) ]   🔐
+            |
+      ┌─────┴─────┐
+      |           |
+      | Valid     | Invalid
+      v           v
+[ Next() ]    [ Error Response ]
+      |           |
+      v           |
+[ Protected Route ] ❌ access denied
+      |
+      v
+[ Send Protected Data ]
+
+
+
+==== Step-by-step  ====
+
+1. Login phase
+Client → username/password দেয়
+Server → check করে
+ঠিক হলে → JWT token দেয়
+
+2. Access phase
+Client → request পাঠায় token সহ
+Middleware → আগে intercept করে
+
+3. Decision phase (Middleware)
+✔️ Token valid → next() → route execute
+❌ Token invalid → error → route-এ ঢুকতেই পারবে না
+
+Core Idea
+👉 Middleware হচ্ছে gatekeeper
+👉 Route হচ্ছে main resource
+
+
+==== EXAMPLE ONLINE STORE ====
+Scenario: User Order দেখতে চায় (Protected)
+১. Login → Token Generate
+২. Middleware → Token Check
+৩. Protected Route → Orders দেখানো
+-----------
+
+------
+auth.js => ১. Login → Token Generate
+--------
+router.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === "user@gmail.com" && password === "1234") {
+    const token = jwt.sign(
+      { userId: "u1001", role: "customer" },
+      "secret123",
+      { expiresIn: "1h" }
+    );
+
+    res.json({ token });
+  } else {
+    res.status(401).json({ message: "Invalid login" });
+  }
+});
+
+
+------
+Middleware.js => ২. Middleware → Token Check
+--------
+function verifyToken(req, res, next) {
+  const auth = req.headers.authorization;
+
+  if (!auth) return res.status(403).json({ message: "No token" });
+
+  const token = auth.split(" ")[1];
+
+  jwt.verify(token, "secret123", (err, decoded) => {
+    if (err) return res.status(401).json({ message: "Invalid token" });
+
+    req.user = decoded;
+    next();
+  });
+}
+
+
+------
+index.js => ৩. Protected Route → Orders দেখানো
+--------
+router.get("/orders", verifyToken, (req, res) => {
+  res.json({
+    message: "Your orders",
+    userId: req.user.userId
+  });
+});
