@@ -1,0 +1,25 @@
+==== Email varification =====
+
+Sending an email with Nodemailer involves three simple steps:
+
+1. Create a transporter - Configure your SMTP server or another supported transport method.
+2. Compose your message - Define the sender, recipient(s), subject, and content.
+3. Send the email - Call transporter.sendMail() with your message options.
+
+step-1
+Create a transporter
+A transporter is an object that handles the connection to your email service and sends messages on your behalf. You create one transporter and reuse it for all your emails.
+
+step-2
+Send a message
+Once you have a transporter, send an email by calling transporter.sendMail(message[, callback]).
+AI will generate html code for your template varification email,
+    - html minifier will minify html code - only body code will be taken/
+
+
+
+index.js (server entry)
+controllers/authController.js (logic)
+utils/mailer.js (email sender)
+
+req, res aisob controller er khahini, mailer buje na... lol
