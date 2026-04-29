@@ -15,7 +15,7 @@ app.use(cors())
 dbConfig()
 
 app.get('/', (req, res) => {
-    res.send('app created...')
+    res.send('app created...')   
 });
 
 const port = process.env.PORT || 5000
