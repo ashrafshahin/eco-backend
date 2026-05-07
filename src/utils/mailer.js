@@ -22,7 +22,7 @@ const sendVerificationEmail = async (email) => {
 
     try {
         const info = await transporter.sendMail({
-            from: process.env.SMTP_USER, 
+            from: process.env.GMAIL_USER, 
             to: email,
             subject: "Please verify your Email...", 
             
