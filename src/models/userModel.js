@@ -23,7 +23,7 @@ const userSchema = new Schema({
     profile: {
         type: String,
     },
-    roll: {
+    role: {
         type: String,
         enum: ['admin', 'user', 'editor', 'vendor'],
         default: 'user',
@@ -77,4 +77,4 @@ module.exports = mongoose.model('User', userSchema);
 // confirm password schema theke pathanor kichu nai , tai schema te thakbe na only frontend e thakbe...
 // full profile registration dekhe schema banate hobe, aksathe
 
-// roll is an important part 
+// user role is an important part ...
