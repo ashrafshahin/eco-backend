@@ -1,0 +1,79 @@
+==== utils e theke kora hoise === trim() nite hole ja korte hobe...
+ছোট improvement (best practice)
+const emptyFieldValidation = (res, ...fields) => {
+  const hasError = fields.some(
+    (field) => !field || !field.toString().trim()
+  );
+
+  if (hasError) {
+    return res.status(400).json({
+      success: false,
+      message: "Please fill up all the fields...",
+    });
+  }
+};
+
+======
+
+    !field =এটা ধরবে:
+    1. undefined
+    2. null
+    3. "" [faka string]
+    4. false
+    5. 0 (এইটা একটু caution দরকার)
+
+√ xxx মানে field আছে কিনা check করে === xxx
+
+====
+
+
+=== // middleware e kora jai ====
+
+const emptyFieldValidation = (...fields) => {
+  return (req, res, next) => {
+    try {
+      const hasEmptyField = fields.some(
+        (field) => !req.body[field] || req.body[field].toString().trim() === ""
+      );
+
+      if (hasEmptyField) {
+        return res.status(400).json({
+          success: false,
+          message: "Please fill up all the fields...",
+        });
+      }
+
+      next(); // সব ঠিক থাকলে next controller এ যাবে
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "Server error...",
+      });
+    }
+  };
+};
+
+module.exports = emptyFieldValidation;
+
+====
+
+== controller e likte hobe ===
+emptyFieldValidation("name", "email", "password")
+
+===
+
+=== route e likte hobe ===
+const express = require("express");
+const router = express.Router();
+const emptyFieldValidation = require("./middleware/emptyFieldValidation");
+
+router.post(
+  "/register",
+  emptyFieldValidation("name", "email", "password"),
+  (req, res) => {
+    res.send("User registered successfully");
+  }
+);
+
+=====
