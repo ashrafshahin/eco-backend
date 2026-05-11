@@ -24,5 +24,16 @@ equal hobe PORT = 5000 not PORT: 5000
 require korte hobe
 cors - port dynamic korte use hoi...
 
+==== jwt token pro === 
+user আসে database থেকে ✔ User.findOne() বা User.create() থেকে ✔ তারপর সেটা token generate করতে use হয়...
 
+ai "USER" holo jar sob information deya ase, je sob use kortese...
+we will not use schema User here, we will use === user ===
 
+-- akhon--- new user bananor time e --- createProfile amar variable deya ase, so oitai token e jeba == new registration korar time e...
+In my code: const token = generateToken(createProfile);
+
+-- aber login korar time e --- variable jaita likso saita pathaite hobe... tahole manush ta k system find out korte parbe --- and token debe...
+In my code: const token = generateToken(existingUser);
+
+===== DO NOT FORGET TO CALL token IN RES.JSON() ====

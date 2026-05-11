@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const { sendVerificationEmail } = require('../utils/mailer');
 const bcrypt = require('bcrypt')
 const { emptyFieldValidation } = require('../utils/validation');
+const generateToken = require('../utils/generateToken');
 
 
 const registrationController = async (req, res) => {
@@ -26,9 +27,6 @@ const registrationController = async (req, res) => {
             return res.status(400).json({ success: false, message: 'password not matched...' })
         };
 
-        // Email varification ...//
-        await sendVerificationEmail(email);
-
         // hash password...
         const hashPassword = bcrypt.hashSync(password, 10);
 
@@ -37,7 +35,13 @@ const registrationController = async (req, res) => {
             password: hashPassword,
             terms: terms,
         }).save()
-       return res.status(201).json({ success: true, message: 'Registration successful...' })
+    
+        // Email varification ...//
+        await sendVerificationEmail(email);
+
+        const token = generateToken(createProfile);
+
+       return res.status(201).json({ token, success: true, message: 'Registration successful...' })
     } catch (error) {
         console.log(error);
         
@@ -56,6 +60,7 @@ const loginController = async (req, res) => {
             return res.status(404).json({ success: false, message: 'please register...' })
         };
 
+        const token = generateToken(existingUser);
         
         // compare hash vs plain password...
         const passMatch = bcrypt.compareSync(
@@ -66,7 +71,7 @@ const loginController = async (req, res) => {
         if (!passMatch) {
             return res.status(400).json({ success: false, message: 'Invalid Credential...' });
         } else {
-            return res.status(200).json({ success: true, message: 'Login Successfully done...' });
+            return res.status(200).json({ token, success: true, message: 'Login Successfully done...' });
         }
 
 
