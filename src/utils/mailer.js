@@ -37,4 +37,29 @@ const sendVerificationEmail = async (email) => {
     }
 };
 
-module.exports = {sendVerificationEmail}
+const resetPasswordEmail = async (email) => {
+
+    const token = generateToken(email);
+
+    if (!email) {
+        throw new Error("No email provided");
+    };
+
+    try {
+        const info = await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: email,
+            subject: "Please reset your password...",
+
+            html: `<body style=margin:0;padding:0;background:#f4f7f6;font-family:Arial,sans-serif><table border=0 cellpadding=0 cellspacing=0 width=100% style="padding:40px 15px"><tr><td align=center><table border=0 cellpadding=0 cellspacing=0 width=600 style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.08)"><tr><td style="background:linear-gradient(135deg,#2e7d32,#43a047);padding:40px 20px"align=center><h1 style=margin:0;color:#fff;font-size:34px;letter-spacing:1px>Eco Bazaar</h1><p style="margin:10px 0 0;color:#e8f5e9;font-size:16px">Sustainable Shopping Made Easy<tr><td style="padding:45px 40px"><h2 style=margin-top:0;color:#222;font-size:28px>Forgot Your Password?</h2><p style=font-size:16px;line-height:1.8;color:#555>Hi <strong>Dear User...</strong>,<p style=font-size:16px;line-height:1.8;color:#555>We received a request to reset the password for your Eco Bazaar account. Don’t worry — it happens to the best of us.<p style=font-size:16px;line-height:1.8;color:#555>Click the button below to securely reset your password:<table border=0 cellpadding=0 cellspacing=0 width=100%><tr><td style="padding:25px 0"align=center><a href="<a href="http://localhost:5173/resetpassword/${token}" style="background:linear-gradient(135deg,#2e7d32,#43a047);color:#fff;text-decoration:none;padding:16px 38px;border-radius:50px;display:inline-block;font-size:16px;font-weight:700;box-shadow:0 5px 15px rgba(67,160,71,.35)"target=_blank>Reset Password</a></table><table border=0 cellpadding=0 cellspacing=0 width=100% style="background:#f1f8f4;border-left:4px solid #43a047;border-radius:8px;margin:20px 0"><tr><td style="padding:18px 20px;color:#555;font-size:14px;line-height:1.7"><a href="http://localhost:5173/resetpassword/${token}"<br>This password reset link will expire in <strong>10 minutes</strong> for your account security.</table><p style=font-size:15px;line-height:1.8;color:#666>If you didn’t request a password reset, you can safely ignore this email. Your account remains secure.<p style=margin-top:35px;font-size:16px;color:#333>Cheers,<br><strong>Eco Bazaar Team</strong><tr><td style="background:#f8f8f8;padding:25px;border-top:1px solid #eee"align=center><p style=margin:0;font-size:13px;color:#888>© 2026 Eco Bazaar. All rights reserved.<p style="margin:8px 0 0;font-size:12px;color:#aaa">Eco-friendly marketplace for sustainable living. | Powered by Ashraf Shahin...</br> ...</table></table>`, // HTML body
+        });
+
+        console.log("Message sent: %s", info.messageId);
+        // Preview URL is only available when using an Ethereal test account
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    } catch (err) {
+        console.error("Error while sending mail:", err);
+    }
+};
+
+module.exports = {sendVerificationEmail, resetPasswordEmail,}

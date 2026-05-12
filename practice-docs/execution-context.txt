@@ -1,0 +1,12 @@
+=== Execution Context =====
+JavaScript এ execution context হলো সেই environment যেখানে কোড রান হয়।
+মানে—যখনই JS কোনো কোড execute করে, তখন সে একটা “container” তৈরি করে যেটার ভিতরে সব কিছু চলে।
+
+function sum() {
+  let x = 5;
+}
+sum();  // here, sum() call হলে আলাদা execution context তৈরি হয়
+
+====Clouser === 
+after a function return and complete its execution, its value saved into global memory.
+"একটা function তার outer scope এর variable মনে রাখতে পারে, even outer function শেষ হয়ে গেলেও"
