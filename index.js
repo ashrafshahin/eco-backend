@@ -10,6 +10,7 @@ const cors = require('cors')
 const dbConfig = require('./src/config/dbConfig');
 
 const { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController } = require('./src/controllers/authController');
+const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
 
 //middleware
 app.use(express.json());
@@ -18,12 +19,12 @@ app.use(cors())
 // database config
 dbConfig()
 
-app.post('/registration', registrationController);
-app.post('/login', loginController);
-app.post('/forgotpassword', forgotPasswordController);
-app.post('/resetpassword/:token', resetPasswordController);
-app.post('/resendverificationemail', resendVerificationEmailController);
-app.post('/verifyemail/:token', verifyEmailController)
+app.post('/registration', registrationLimiter, registrationController);
+app.post('/login', loginLimiter, loginController);
+app.post('/forgotpassword', forgotPasswordLimiter, forgotPasswordController);
+app.post('/resetpassword/:token', resetPasswordLimiter, resetPasswordController);
+app.post('/resendverificationemail', resendVerificationEmailLimiter, resendVerificationEmailController);
+app.post('/verifyemail/:token', varificationEmailLimiter, verifyEmailController)
 
 
 
