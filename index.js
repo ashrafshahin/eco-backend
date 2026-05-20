@@ -11,7 +11,7 @@ const dbConfig = require('./src/config/dbConfig');
 
 const { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController } = require('./src/controllers/authController');
 const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
-const { getAllUsers, singleUserData } = require('./src/controllers/userController');
+const { deleteDataController, updateUserDataController, getAllUsersController, singleUserDataController } = require('./src/controllers/userController');
 
 //middleware
 app.use(express.json());
@@ -33,8 +33,14 @@ app.post('/verifyemail/:token', varificationEmailLimiter, verifyEmailController)
 // Order management...
 
 // User management...
-app.get('/getallusers', getAllUsers)
-app.get('/getsingleuser/:id', singleUserData)
+app.get('/getallusers', getAllUsersController )
+app.get('/getsingleuser/:id', singleUserDataController)
+
+// get data
+app.delete('/deleteuser/:id', deleteDataController)
+
+// update 
+app.post('/updateuser/:id', updateUserDataController)
 
 // Vendor management...
 

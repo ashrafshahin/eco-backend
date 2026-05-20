@@ -1,0 +1,25 @@
+
+== _id related error of update data===
+
+Update data error:... ReferenceError: _id is not defined
+    at updateUserDataController (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/src/controllers/userController.js:56:61)
+    at Layer.handleRequest (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:295:15
+    at param (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:600:14)
+    at param (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:610:14)
+    at processParams (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:664:3)
+
+    === solve === 
+    dont need to write {id:_id} = id  // thats it
+    dont write instead of {new: true} = {returnDocument: 'after'}
+
+    solve full summary:
+    const { id } = req.params;
+    const userData = await User.findByIdAndUpdate(id, req.body, { returnDocument: 'after' })
+
+        ====== xxxx =====
+
