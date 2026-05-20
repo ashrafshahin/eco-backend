@@ -21,7 +21,7 @@ const registrationController = async (req, res) => {
 
         if (!terms) {
             return res.status(400).json({ success: false, message: 'Please accept our Terms and Conditions...' })
-   };
+        };
 
         if (password !== confirmPassword) {
             return res.status(400).json({ success: false, message: 'password not matched...' })
@@ -41,7 +41,15 @@ const registrationController = async (req, res) => {
 
         const token = generateToken(createProfile);
 
-        return res.status(201).json({ token, success: true, message: 'Registration successful...' })
+        return res.status(201).json({
+            token,
+            success: true,
+            message: 'Registration successful...',
+            user: {
+                id: createProfile._id,
+                email: createProfile.email
+            }
+        })
     } catch (error) {
         console.log(error);
 

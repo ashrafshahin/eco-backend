@@ -1,0 +1,21 @@
+
+
+এটা খুব important backend practice।
+এটার কাজ হলো: MongoDB ID valid কি না আগে check করা
+এটা 24 character-এর hexadecimal ObjectId।
+
+ধরো user URL-এ ভুল ID পাঠালো: 682c82d99a81f09d4f8a4e12 real ID format
+
+if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid ID"
+            })
+        };
+
+aita deyar mane holo
+ mongoose.Types.ObjectId.isValid(id) // na thakle 400 error debe DB te jabai na
+এটা internally check করে:
+length ঠিক আছে?
+format ঠিক আছে?
+Mongo ObjectId pattern match করছে?
