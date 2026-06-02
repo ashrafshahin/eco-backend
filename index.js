@@ -12,7 +12,7 @@ const dbConfig = require('./src/config/dbConfig');
 const { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController } = require('./src/controllers/authController');
 const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
 const { deleteDataController, updateUserDataController, getAllUsersController, singleUserDataController } = require('./src/controllers/userController');
-const { createProductController } = require('./src/controllers/productController');
+const { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController } = require('./src/controllers/productController');
 
 //middleware
 app.use(express.json());
@@ -30,7 +30,12 @@ app.post('/resendverificationemail', resendVerificationEmailLimiter, resendVerif
 app.post('/verifyemail/:token', varificationEmailLimiter, verifyEmailController)
 
 // Product create...
-app.post('/createproduct', createProductController);
+app.post('/create-product', createProductController);
+app.get('/get-all-products', getAllProductsController)
+app.get('/get-single-product/:id', getSingleProductController)
+app.post('/update-product/:id', updateProductController);
+app.delete('/delete-product/:id', deleteProductController);
+
 
 // Order management...
 
