@@ -1,0 +1,56 @@
+
+SKU = Store Keeping Unit [alpha numaric hobe]
+skew theke asche 
+
+
+stock e default-0 kora hoise, so that required -true korar r dorker nai. 
+stock na thakle amni tai 0 debe...
+
+
+Recommendation Review schema jonno---
+*Review আলাদা collection হলে User এবং Product schema-তে review reference রাখা বাধ্যতামূলক না।
+User schema → কিছু লাগবে না
+Product schema → averageRating, numReviews
+Review schema → user, product, rating, comment
+
+এটাই বেশিরভাগ e-commerce project-এর standard structure।
+
+----xxx---
+Reference system ki hobe
+Here: Who will Reference whom...
+Product → Category
+Product → SubCategory
+SubCategory → Category
+
+
+----xxxx ----
+
+আমার পরামর্শ
+Learning project → না রাখলেও চলে।
+Real e-commerce / production → রাখা ভালো।
+Amazon, Daraz, Shopify-based stores-এর মতো বড় সিস্টেমে aggregate values আলাদা করে store করা খুবই common practice।
+== product schema te ===
+averageRating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
+    },
+
+    numReviews: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+
+রাখার কারণ হলো performance। ধরো Product-এর 5,000টা review আছে। 
+প্রতিবার product list দেখানোর সময় যদি calculate করো:
+const reviews = await Review.find({ product: productId });
+তারপর average বের করো, তাহলে database-এর উপর অপ্রয়োজনীয় চাপ পড়বে।
+
+Learning project → না রাখলেও চলে।
+
+
+
+
+
