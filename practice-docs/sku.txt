@@ -1,0 +1,9 @@
+Detailed SKU or any Unique code making process...
+
+const year = new Date().getFullYear();
+const timePart = Date.now().toString().slice(-5);
+const randomPart = Math.floor(100 + Math.random() * 900);
+
+const sku = `ECO${year}-${timePart}-${randomPart}`;
+
+i used in short cut process...

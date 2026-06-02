@@ -16,7 +16,7 @@ const registrationController = async (req, res) => {
 
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
-            return res.status(409).json({ success: true, message: 'Already registerred...' })
+            return res.status(409).json({ success: false, message: 'Already registerred...' })
         };
 
         if (!terms) {

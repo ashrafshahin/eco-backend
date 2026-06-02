@@ -53,4 +53,40 @@ Learning project → না রাখলেও চলে।
 
 
 
+testing new product controller
+SUCCESSFUL
 
+=== INPUT ===
+{
+  "title": "iPhone 17 Pro Max",
+  "price": 270000,
+  "category": "684abc123",
+  "subCategory": "684def456",
+  "brand": "684ghi789",
+  "stock": 10
+}
+
+===OUTPUT===
+
+{
+    "success": true,
+    "message": "New Product Uploaded successfully...",
+    "product": {
+        "title": "iPhone 17 Pro Max",
+        "price": 270000,
+        "discountPrice": 0,
+        "sku": "Eco2026-31656-824",
+        "stock": 10,
+        "category": "684abc123",
+        "brand": "684ghi789",
+        "tags": [],
+        "status": "pending",
+        "averageRating": 0,
+        "numReviews": 0,
+        "_id": "6a1eb57786a714df7c0ad02a",
+        "createdAt": "2026-06-02T10:50:31.723Z",
+        "updatedAt": "2026-06-02T10:50:31.723Z",
+        "__v": 0
+    }
+}
+====XXX====

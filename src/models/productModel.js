@@ -8,6 +8,12 @@ const productSchema = new Schema({
         required: true,
         trim: true,
     },
+    sku: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true,
+    },
     description: {
         type: String,
     },
@@ -17,40 +23,42 @@ const productSchema = new Schema({
     price: {
         type: Number,
         required: true,
-        min: 0,
     },
     discountPrice: {
         type: Number,
         min: 0,
         default: 0,
     },
-    sku: {
-        type: String,
-        unique: true,
-        required: true,
-        trim: true,
-    },
+    
     stock: {
         type: Number,
         min: 0,
         default: 0,
     },
-    brand: {
-        type: Schema.Types.ObjectId,
-        ref: 'Brand',
-        required: true,
-    },
-
+    
     category: {
-        type: Schema.Types.ObjectId,
-        ref: 'Category',
+        type: String,
         required: true,
     },
-    subCategory: {
-        type: Schema.Types.ObjectId,
-        ref: 'SubCategory',
-        required: true,
+    brand: {
+        type: String,
+        
     },
+    // brand: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Brand',
+    //     required: true,
+    // },
+    // category: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Category',
+    //     required: true,
+    // },
+    // subCategory: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'SubCategory',
+    //     required: true,
+    // },
 
     tags: [{
         type: String,
