@@ -29,20 +29,20 @@ const productSchema = new Schema({
         min: 0,
         default: 0,
     },
-    
+
     stock: {
         type: Number,
         min: 0,
         default: 0,
     },
-    
+
     category: {
         type: String,
         required: true,
     },
     brand: {
         type: String,
-        
+
     },
     // brand: {
     //     type: Schema.Types.ObjectId,
@@ -73,6 +73,17 @@ const productSchema = new Schema({
         enum: ['pending', 'active', 'inactive'],
         default: 'pending',
     },
+    images: [{
+        url: {
+            type: String,
+            required: true,
+        },
+        isMain: {
+            type: Boolean,
+            default: false,
+        }
+
+    }],
     averageRating: {
         type: Number,
         default: 0,

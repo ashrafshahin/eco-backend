@@ -1,0 +1,68 @@
+
+=== ID related Confusion ===
+userId
+productId
+imageId
+newMainImageId
+
+// req.body থেকে আইডিটা নিলাম
+const { productId, newMainImageId } = req.body; 
+NOTE: We are taking dystructured variables here, any name is fine,
+Database will send _id from respective ObjectId ...
+
+sober jonno alada _id database e create hobe, 
+so amader kono kichu korte hobe na...
+just req.body the nibo...
+
+===prompt--- 
+ame to schema te product id pabo but onno ta ki 
+req.body te pabo na schema te dese na?===---prompt---
+
+newMainImageId 
+ফিল্ডটি আলাদা করে স্কিমাতে লিখতে হয় না। এটি আপনি সরাসরি req.body থেকেই পাবেন।
+১. স্কিমাতে কেন দিতে হয় না?
+Mongoose-এ আপনি যখন কোনো অ্যারে তৈরি করেন (যেমন আপনার images অ্যারে), তখন Mongoose প্রতিটি ইমেজের জন্য অটোমেটিক একটি ইউনিক _id তৈরি করে দেয়।আপনার স্কিমাটি ব্যাকএন্ডে দেখতে আসলে এইরকম হয়ে যায়:
+images: [
+  {
+    _id: ObjectId("65ebd7890123..."), // এটি মঙ্গুস নিজে থেকেই তৈরি করে দেয়!
+    url: "https://example.com",
+    isMain: false
+  },
+  {
+    _id: ObjectId("65ebd9990456..."), // এটিও মঙ্গুস তৈরি করেছে
+    url: "https://example.com",
+    isMain: true
+  }
+]
+
+যেহেতু প্রতিটি ইমেজের একটি নিজস্ব _id অলরেডি ডাটাবেজে আছে, 
+তাই স্কিমাতে নতুন করে newMainImageId নামে কোনো ফিল্ড বানানোর দরকার নেই।
+
+// req.body থেকে আইডিটা নিলাম variables jekono name hobe...
+const { productId, newMainImageId } = req.body; 
+
+FINAL NOTE: We are taking dystructured variables here, any name is fine,
+Database will send _id from respective ObjectId ...
+
+======
+
+ভুল ৩টি কী কী? const vs let
+
+ভুল ১ (const বনাম let): আপনি উপরে const targetImage = false; লিখেছেন। 
+কিন্তু লুপের ভেতর আবার targetImage = true করে মান বদলাতে চেয়েছেন। 
+জাভাস্ক্রিপ্টে const ভ্যারিয়েবলের মান পরিবর্তন করা যায় না। এখানে let ব্যবহার করতে হবে।
+
+ভুল ২  (রেসপন্স এরর): একদম শেষে রেসপন্সে আপনি লিখেছেন images: product.targetImage।
+ কিন্তু product-এর ভেতর targetImage নামে কিছু নেই, 
+ ওটার নাম হবে product.images (পুরো আপডেট হওয়া ইমেজের অ্যারে দেখানোর জন্য)।
+
+
+ একটি প্রো-টিপ (Pro-Tip)জাভাস্ক্রিপ্টে forEach লুপের ভেতরে কোনো কিছু এরর দিলে বা ভুল আইডি থাকলে
+  লুপটি মাঝপথে থামানো যায় না, সে ৫ বারই ঘুরবে। 
+  যেহেতু আপনার ইমেজ মাত্র ৫টি, তাই এখানে পারফরম্যান্সে কোনো সমস্যা হবে না। 
+  কিন্তু যদি কখনো ইমেজের সংখ্যা অনেক বেশি হয়, তখন আপনি for...of লুপ ব্যবহার করতে পারেন।
+   for...of লুপ ব্যবহার করলে টার্গেট ইমেজটি পেয়ে যাওয়ার সাথে সাথে break;
+    দিয়ে লুপটি থামিয়ে দেওয়া যায়, যা কোডকে আরো ফাস্ট করে।
+
+
+  
