@@ -34,14 +34,13 @@ app.post('/resetpassword/:token', resetPasswordLimiter, resetPasswordController)
 app.post('/resendverificationemail', resendVerificationEmailLimiter, resendVerificationEmailController);
 app.post('/verifyemail/:token', varificationEmailLimiter, verifyEmailController)
 
-// Product create...
-app.post('/create-product', upload.array('images', 5), createProductController);
+// Standard RESTful API Design... Product create...
 app.get('/get-all-products', getAllProductsController)
 app.get('/get-single-product/:id', getSingleProductController)
-app.post('/update-product/:id', updateProductController);
 app.delete('/delete-product/:id', deleteProductController);
 
-// Standard RESTful API Design...
+app.post('/create-product', upload.array('images', 5), createProductController);
+app.put('/update-product/:id', upload.array('images', 5), updateProductController);
 app.patch('/update-main-image/:id', updateMainImageController)
 
 
