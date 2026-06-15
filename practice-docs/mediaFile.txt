@@ -77,3 +77,17 @@ json{
 }
 
 ব্যাকএন্ড ম্যাজিক: আপনার লেখা কন্ট্রোলার কোডটি তখন ডাটাবেজে গিয়ে আগের মেইন ইমেজটিকে false করে দেবে এবং এই নতুন newMainImageId-কে true করে save() করে দেবে।
+
+
+বর্তমান logic: 15 june 2026
+
+Product find ✅
+Product exists check ✅
+All images false ✅
+Target image true ✅
+Image not found check ✅
+Save product ✅
+Proper response ✅
+
+এটা production-level basic solution হিসেবে ঠিক আছে।
+

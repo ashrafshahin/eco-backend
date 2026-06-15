@@ -1,7 +1,8 @@
 const Product = require('../models/productModel');
 const { emptyFieldValidation } = require('../utils/validation');
+const mongoose = require('mongoose');
 
-const createProductController = async (req, res) => {
+const createProductController = async (req, res) => { 
     try {
         const { title, price, category } = req.body;
 
@@ -133,23 +134,37 @@ const deleteProductController = async (req, res) => {
 
 const updateMainImageController = async (req, res) => {
     try {
-        const { productId, newMainImageId } = req.body;
+        console.log(req.body, 'request e ki ase....');
+        const { id } = req.params; // image er id dhora hoitese
+        const { newMainImageId } = req.body;
         // find product step-1
-        const product = await Product.findById(productId);
+        const product = await Product.findById(id);
         if (!product) {
             return res.status(404).json({
                 success: false,
                 message: 'Product not found...',
             })
         };
+        // MongoDB invalid id check before sending it to Database...
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid Product ID...',
+            });
+        };
+        if (!mongoose.Types.ObjectId.isValid(newMainImageId)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid Image ID...',
+            });
+        };
+
         // all image false korte hobe step-2
         let targetImage = false;
 
             // all image false korte hobe step-2
         product.images.forEach((image) => {
-            if (image.isMain === true) {
-                image.isMain = false
-            }
+            image.isMain = false
 
             // new target image true korbe step-3
             if (image._id.toString() === newMainImageId) {
@@ -157,6 +172,7 @@ const updateMainImageController = async (req, res) => {
                 targetImage = true
             }
         });
+
 
         // targetImage ase kina check...
         if (!targetImage) {

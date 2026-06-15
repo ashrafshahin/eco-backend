@@ -1,0 +1,82 @@
+multipart/form-data; boundary=--------------------------129365152706055566896222
+undefined
+undefined request e ki ase....
+TypeError: Cannot destructure property 'newMainImageId' of 'req.body' as it is undefined.
+    at updateMainImageController (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/src/controllers/productController.js:141:17)
+    at Layer.handleRequest (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:295:15
+    at param (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:600:14)
+    at param (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:610:14)
+    at processParams (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/router/index.js:664:3) Update Main Image related error...
+
+application/json
+{ newMainImageId: '6a2fe82aaece645235d544c9' }
+{ newMainImageId: '6a2fe82aaece645235d544c9' } request e ki ase....
+application/json
+{ newMainImageId: '6a2fe82aaece645235d544c8' }
+{ newMainImageId: '6a2fe82aaece645235d544c8' } request e ki ase....
+
+Solve= Postman e kivabe update korbo saita jante hobe.
+http://localhost:5000/update-main-image/6a2fe82aaece645235d544c7
+ai link delam 
+body->json-> { newMainImageId: '6a2fe82aaece645235d544c8' } dete hobe jai product er main image tumi change korte chao.. 
+1st id is product id, 
+2nd id is product image id...
+{
+  "newMainImageId": "IMAGE_ID"
+}
+
+
+=== 
+Debug issue check = Controller-এর শুরুতে দাও:
+
+console.log(req.headers['content-type']);
+console.log(req.body);
+
+====
+
+Error: Malformed part header
+    at SBMH.ssCb [as _cb] (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/busboy/lib/types/multipart.js:398:32)
+    at feed (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/streamsearch/lib/sbmh.js:219:14)
+    at SBMH.push (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/streamsearch/lib/sbmh.js:104:16)
+    at Multipart._write (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/busboy/lib/types/multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:570:12)
+    at _write (node:internal/streams/writable:499:10)
+    at Writable.write (node:internal/streams/writable:508:10)
+    at IncomingMessage.ondata (node:internal/streams/readable:1012:24)
+    at IncomingMessage.emit (node:events:508:28)
+    at Readable.read (node:internal/streams/readable:784:10)
+Error: Malformed part header
+    at SBMH.ssCb [as _cb] (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/busboy/lib/types/multipart.js:398:32)
+    at feed (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/streamsearch/lib/sbmh.js:219:14)
+    at SBMH.push (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/streamsearch/lib/sbmh.js:104:16)
+    at Multipart._write (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/busboy/lib/types/multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:570:12)
+    at _write (node:internal/streams/writable:499:10)
+    at Writable.write (node:internal/streams/writable:508:10)
+    at IncomingMessage.ondata (node:internal/streams/readable:1012:24)
+    at IncomingMessage.emit (node:events:508:28)
+    at Readable.read (node:internal/streams/readable:784:10)
+Error: Malformed part header
+    at SBMH.ssCb [as _cb] (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/busboy/lib/types/multipart.js:398:32)
+    at feed (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/streamsearch/lib/sbmh.js:219:14)
+    at SBMH.push (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/streamsearch/lib/sbmh.js:104:16)
+    at Multipart._write (/Users/Shalhizan/Desktop/backend/ecobazaar-backend/node_modules/busboy/lib/types/multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:570:12)
+    at _write (node:internal/streams/writable:499:10)
+    at Writable.write (node:internal/streams/writable:508:10)
+    at IncomingMessage.ondata (node:internal/streams/readable:1012:24)
+    at IncomingMessage.emit (node:events:508:28)
+    at Readable.read (node:internal/streams/readable:784:10)
+[Object: null prototype] {
+  tiltle: 'iPhone 15 Pro',
+  description: 'latest apple phone',
+  price: '120000',
+  images: [ '', '' ]
+} request e ki ase...
+
+=== Solve = Postman e wrong value enter, validation, extra space ==== 

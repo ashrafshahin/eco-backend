@@ -35,13 +35,15 @@ app.post('/resendverificationemail', resendVerificationEmailLimiter, resendVerif
 app.post('/verifyemail/:token', varificationEmailLimiter, verifyEmailController)
 
 // Standard RESTful API Design... Product create...
+app.post('/create-product', upload.array('images', 5), createProductController);
+app.put('/update-product/:id', upload.array('images', 5), updateProductController);
+app.patch('/update-main-image/:id', updateMainImageController);
+
 app.get('/get-all-products', getAllProductsController)
 app.get('/get-single-product/:id', getSingleProductController)
 app.delete('/delete-product/:id', deleteProductController);
 
-app.post('/create-product', upload.array('images', 5), createProductController);
-app.put('/update-product/:id', upload.array('images', 5), updateProductController);
-app.patch('/update-main-image/:id', updateMainImageController)
+
 
 
 
