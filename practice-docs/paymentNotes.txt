@@ -1,0 +1,62 @@
+Recommended Project Structure
+src/
+│
+├── controllers/
+│   ├── paymentController.js
+│
+├── routes/
+│   ├── paymentRoutes.js
+│
+├── services/
+│   ├── sslcommerzService.js
+│   ├── stripeService.js
+│
+├── models/
+│   ├── Order.js
+│
+├── middlewares/
+│   ├── webhookVerify.js
+│
+└── utils/
+    ├── generateTransactionId.js
+
+
+
+= eCommerce single / Multi-Vendor Project e Payment Order Flow =
+
+Cart
+↓
+Checkout
+↓
+Create Order (Pending)
+↓
+Create Payment Session
+↓
+Redirect Gateway
+↓
+Payment Success
+↓
+Webhook Verify
+↓
+Order Paid
+↓
+Stock Update
+↓
+Vendor Earnings Update // marketplace
+↓
+Invoice Generate
+↓
+Email Send
+
+---------------------
+Gateway Comparison
+---------------------
+Feature             	PayPal	        Stripe	        SSLCommerz
+--------                ---------       ----------      ------------
+Bangladesh	            Limited	        Limited	        Excellent
+International	        Excellent	    Excellent	    Weak
+Card Payment	        Yes	            Yes	            Yes
+PayPal Wallet	        Yes	            No	            No
+Refund API	            Yes	            Yes	            Yes
+Subscription	        Yes	            Excellent	    Limited
+Multi-currency	        Excellent	    Excellent	    Basic

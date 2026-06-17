@@ -1,0 +1,181 @@
+SSLCommerz Integration
+
+Step 1: SSLCommerz Account Create
+Official site: https://sslcommerz.com/
+SSLCommerz 
+
+you will need these documents:
+Trade License
+NID
+Bank Account
+Website URL
+
+Approval hole paba:
+STORE_ID=
+STORE_PASSWORD=
+Sandbox credentials o dibe testing er jonno.
+
+Step 2: 
+Install Package: npm install sslcommerz-lts
+
+Step 3:
+ Environment Variables
+SSLC_STORE_ID=your_store_id
+SSLC_STORE_PASSWORD=your_store_password
+
+SSLC_IS_LIVE=false
+
+Step 4: 
+Order Create Before Payment
+User checkout click korle:
+const order = await Order.create({
+    user: req.user._id,
+    items,
+    totalPrice,
+    paymentStatus: 'pending',
+    orderStatus: 'pending'
+});
+
+Payment er age order create korba.
+
+Step 5: 
+Create Payment Session
+
+Controller:
+---------
+const SSLCommerzPayment = require('sslcommerz-lts');
+
+const store_id = process.env.SSLC_STORE_ID;
+const store_passwd = process.env.SSLC_STORE_PASSWORD;
+const is_live = false;
+
+const transactionId = `TXN-${Date.now()}`;
+
+const data = {
+    total_amount: order.totalPrice,
+    currency: 'BDT',
+    tran_id: transactionId,
+
+    success_url:
+      'http://localhost:5000/api/payment/success',
+
+    fail_url:
+      'http://localhost:5000/api/payment/fail',
+
+    cancel_url:
+      'http://localhost:5000/api/payment/cancel',
+
+    ipn_url:
+      'http://localhost:5000/api/payment/ipn',
+
+    product_name: 'Order Payment',
+    product_category: 'Ecommerce',
+    product_profile: 'general',
+
+    cus_name: user.name,
+    cus_email: user.email,
+    cus_phone: user.phone,
+};
+
+Step 6: 
+Initialize Payment
+const sslcz = new SSLCommerzPayment(
+    store_id,
+    store_passwd,
+    is_live
+);
+
+const apiResponse =
+    await sslcz.init(data);
+
+res.json({
+    paymentUrl: apiResponse.GatewayPageURL
+});
+
+Frontend:
+
+window.location.href = paymentUrl;
+Step 7: Success Route
+router.post(
+    '/success',
+    paymentSuccessController
+);
+
+Example:
+
+exports.paymentSuccessController =
+async (req, res) => {
+
+   const { tran_id } = req.body;
+
+   const order =
+      await Order.findOne({
+          transactionId: tran_id
+      });
+
+   order.paymentStatus = 'paid';
+
+   await order.save();
+
+   res.redirect(
+      'http://localhost:3000/payment-success'
+   );
+};
+
+Step 8: 
+Better Way → Validation API
+
+Success URL hit holei paid mark korba na.
+
+Validation korba:
+
+const validation =
+await sslcz.validate({
+   val_id
+});
+
+Check:
+
+if(validation.status === 'VALID'){
+    order.paymentStatus='paid';
+}
+
+Step 9: 
+Webhook/IPN Route
+router.post(
+   '/ipn',
+   paymentWebhookController
+);
+
+Gateway theke notification asbe.
+
+if(order.paymentStatus !== 'paid'){
+    order.paymentStatus = 'paid';
+}
+
+Eta duplicate webhook handle korbe.
+
+Step 10: 
+Update Stock
+
+Payment success hole:
+
+for(const item of order.items){
+
+   await Product.findByIdAndUpdate(
+      item.product,
+      {
+        $inc:{
+           stock:-item.quantity
+        }
+      }
+   );
+}
+Step 11: 
+Store Transaction Info
+paymentInfo:{
+    transactionId,
+    gateway:'sslcommerz',
+    amount,
+    currency:'BDT'
+}

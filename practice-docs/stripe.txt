@@ -1,0 +1,117 @@
+Stripe Integration 
+
+Stripe beshi clean architecture use kore.
+
+Step 1: Stripe Account
+
+Official: https://stripe.com/
+
+Stripe
+
+Dashboard e giye:
+
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+collect korba.
+
+Step 2: 
+Install Stripe: npm install stripe
+
+Step 3: 
+Initialize Stripe
+const Stripe = require('stripe');
+
+const stripe =
+    Stripe(process.env.STRIPE_SECRET_KEY);
+
+Step 4: 
+Create Checkout Session
+const session =
+await stripe.checkout.sessions.create({
+
+  payment_method_types:[
+      'card'
+  ],
+
+  line_items:[
+    {
+      price_data:{
+        currency:'usd',
+
+        product_data:{
+          name:'Product'
+        },
+
+        unit_amount:5000
+      },
+
+      quantity:1
+    }
+  ],
+
+  mode:'payment',
+
+  success_url:
+   'http://localhost:3000/success',
+
+  cancel_url:
+   'http://localhost:3000/cancel'
+});
+Step 5: Return Session URL
+res.json({
+   url: session.url
+});
+
+Frontend:
+
+window.location.href =
+    session.url;
+
+
+Step 6: 
+Create Webhook
+
+Stripe Dashboard:
+
+Developers
+→ Webhooks
+→ Add Endpoint
+
+Endpoint:
+
+/api/payment/webhook
+
+Step 7:
+ Verify Webhook
+const sig =
+ req.headers['stripe-signature'];
+
+const event =
+ stripe.webhooks.constructEvent(
+   req.body,
+   sig,
+   process.env.STRIPE_WEBHOOK_SECRET
+ );
+Step 8: Payment Success Event
+if(
+ event.type ===
+ 'checkout.session.completed'
+){
+   // mark order paid
+}
+Step 9: 
+Update Order
+order.paymentStatus='paid';
+
+order.paidAt=new Date();
+
+await order.save();
+
+Step 10: 
+Reduce Inventory
+product.stock -= item.quantity;
+
+Payment successful holei stock update korba.
+

@@ -1,0 +1,291 @@
+PayPal Integration
+
+PayPal integration Stripe er motoi, kintu PayPal-er nijer Checkout API use korte hoy. Jodi tumi MERN multi-vendor e-commerce build koro, tahole PayPal Checkout Orders API use kora best.
+
+Step 1: Create PayPal Developer Account
+Official Developer Portal: https://developer.paypal.com/home/
+
+PayPal Developer
+Login kore:
+Dashboard
+→ My Apps & Credentials
+→ Create App
+
+Paba:
+PAYPAL_CLIENT_ID=
+PAYPAL_CLIENT_SECRET=
+
+Sandbox & Live duita credential thakbe.
+
+Step 2: 
+Install SDK
+npm install @paypal/checkout-server-sdk
+
+Step 3: 
+Environment Variables
+
+PAYPAL_CLIENT_ID=your_client_id
+PAYPAL_CLIENT_SECRET=your_client_secret
+PAYPAL_MODE=sandbox
+
+Step 4: 
+Configure PayPal Client
+
+config/paypal.js
+
+const paypal = require('@paypal/checkout-server-sdk');
+
+function environment() {
+  return new paypal.core.SandboxEnvironment(
+    process.env.PAYPAL_CLIENT_ID,
+    process.env.PAYPAL_CLIENT_SECRET
+  );
+}
+
+function client() {
+  return new paypal.core.PayPalHttpClient(
+    environment()
+  );
+}
+
+module.exports = client;
+
+Step 5: 
+Create Order First
+
+Checkout click korar sathe sathe:
+
+const order = await Order.create({
+  user: req.user._id,
+  items,
+  totalPrice,
+  paymentStatus: 'pending',
+  orderStatus: 'pending'
+});
+
+Database e pending order create korba.
+
+Step 6: 
+Create PayPal Order
+
+Controller:
+
+const paypal = require('@paypal/checkout-server-sdk');
+const client = require('../config/paypal');
+
+exports.createPayPalOrder = async (req, res) => {
+
+  const request =
+    new paypal.orders.OrdersCreateRequest();
+
+  request.prefer('return=representation');
+
+  request.requestBody({
+    intent: 'CAPTURE',
+
+    purchase_units: [
+      {
+        amount: {
+          currency_code: 'USD',
+          value: '100'
+        }
+      }
+    ]
+  });
+
+  const order =
+      await client().execute(request);
+
+  res.json({
+    orderId: order.result.id
+  });
+};
+
+Response:
+
+{
+  "orderId": "5O190127TN364715T"
+}
+Step 7: 
+Frontend Install PayPal SDK
+
+React:
+
+npm install @paypal/react-paypal-js
+Step 8: Wrap Application
+import {
+  PayPalScriptProvider
+} from "@paypal/react-paypal-js";
+
+<PayPalScriptProvider
+ options={{
+   clientId:
+    process.env.REACT_APP_PAYPAL_CLIENT_ID
+ }}
+>
+  <App />
+</PayPalScriptProvider>
+Step 9: Render PayPal Button
+import {
+ PayPalButtons
+} from "@paypal/react-paypal-js";
+
+<PayPalButtons
+
+ createOrder={async () => {
+
+   const res = await fetch(
+     "/api/paypal/create-order",
+     {
+       method: "POST"
+     }
+   );
+
+   const data = await res.json();
+
+   return data.orderId;
+ }}
+
+ onApprove={async (data) => {
+
+   await fetch(
+     `/api/paypal/capture/${data.orderID}`,
+     {
+       method: "POST"
+     }
+   );
+ }}
+/>
+
+Step 10: 
+Capture Payment
+
+Backend:
+
+exports.capturePayment =
+async (req, res) => {
+
+  const { orderId } = req.params;
+
+  const request =
+      new paypal.orders.OrdersCaptureRequest(
+          orderId
+      );
+
+  request.requestBody({});
+
+  const capture =
+      await client().execute(request);
+
+  res.json(capture.result);
+};
+
+Step 11: 
+Verify Payment
+
+Capture response:
+
+{
+  "status": "COMPLETED"
+}
+
+Check:
+
+if(
+ capture.result.status ===
+ 'COMPLETED'
+){
+   // mark paid
+}
+
+Step 12: 
+Update Order
+order.paymentStatus = 'paid';
+
+order.paidAt = new Date();
+
+await order.save();
+
+Step 13: 
+Store Transaction Info
+paymentInfo: {
+   gateway: 'paypal',
+   transactionId:
+     capture.result.id,
+   amount:
+     order.totalPrice,
+   currency: 'USD'
+}
+
+Step 14: 
+Update Inventory
+for(const item of order.items){
+
+  await Product.findByIdAndUpdate(
+    item.product,
+    {
+      $inc:{
+        stock:-item.quantity
+      }
+    }
+  );
+}
+
+Payment success er por stock update korba.
+
+Step 15:
+ Webhooks (Recommended)
+
+PayPal Dashboard:
+
+My Apps & Credentials
+↓
+Webhooks
+↓
+Create Webhook
+
+Endpoint:
+
+/api/paypal/webhook
+Step 16: Handle Webhook
+router.post(
+  '/webhook',
+  paypalWebhookController
+);
+
+Example:
+
+if(
+ event.event_type ===
+ 'PAYMENT.CAPTURE.COMPLETED'
+){
+   // verify
+   // update order
+}
+
+Webhook use korle frontend bypass koreo payment confirmation pawa jay.
+
+Production-Ready Payment Flow
+Cart
+↓
+Checkout
+↓
+Create Pending Order
+↓
+Create PayPal Order
+↓
+User Pays
+↓
+Capture Payment
+↓
+Verify Response
+↓
+Webhook Confirmation
+↓
+Mark Paid
+↓
+Reduce Stock
+↓
+Generate Invoice
+↓
+Email User
