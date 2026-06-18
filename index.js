@@ -18,6 +18,7 @@ const { registrationController, loginController, forgotPasswordController, reset
 const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
 const { deleteDataController, updateUserDataController, getAllUsersController, singleUserDataController } = require('./src/controllers/userController');
 const { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController } = require('./src/controllers/productController');
+const { createCartController } = require('./src/controllers/cartController');
 
 //middleware
 app.use(express.json());
@@ -43,8 +44,8 @@ app.get('/get-all-products', getAllProductsController)
 app.get('/get-single-product/:id', getSingleProductController)
 app.delete('/delete-product/:id', deleteProductController);
 
-
-
+// Cart management
+app.post('/create-cart/:userId', createCartController);
 
 
 // Order management...
