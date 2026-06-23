@@ -1,0 +1,19 @@
+
+why we will use Cookies and Redis...???
+
+Cookie → Browser-এ token/session identifier রাখে
+Redis → Server-side token/session state রাখে
+
+Redis cookie-এর replacement না।
+
+important part to understand...
+
+Browser
+   |
+HttpOnly Cookies
+   |      (Access Token + Refresh Token)
+Backend
+   |
+Redis      (Refresh Token Store / Blacklist / Session Data)
+   |
+MongoDB

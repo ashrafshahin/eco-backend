@@ -72,5 +72,95 @@ const createCartController = async (req, res) => {
     }
 };
 
+const cartProductIncreDecreController = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const { type } = req.body;
 
-module.exports = {createCartController, }
+        const product = await Product.findById(productId);
+        if (type === plus) {
+            product.quantity = product.quantity + 1
+            await product.save()
+        } else {
+            product.quantity = product.quantity - 1
+            await product.save()
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Cart updated successfully...'
+        });
+
+        
+    } catch (error) {
+        console.error('Cart Increment Decrement related error...,', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Cart Increment Decrement related Server Error... '
+        });
+    }
+};
+
+// cart e product ase kina? jodi thake delete korchi... //
+
+const cartProductDeleteController = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        
+        const existingProduct = await Product.findById(productId);
+        if (!existingProduct) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found...'
+            });
+        };
+
+        await Cart.findByIdAndDelete({ _id: productId });
+
+        res.status(200).json({
+            success: true,
+            message: 'Cart Product Deleted successfully...',
+        })
+
+
+    } catch (error) {
+        console.error('Cart product delete related error...,', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Cart product delete related Server Error... '
+        });
+    }  
+};
+
+const getCartProductController = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const cart = await Cart.find({ _id: userId });
+
+        let totalPrice = 0;
+
+        cart.map((item) => {
+            totalPrice += item.price
+        });
+
+        await cart.save();
+        res.status(200).json({
+            success: true,
+            message: 'All products on Cart...',
+            user: userId,
+            cart,
+            totalPrice,
+        });
+        
+    } catch (error) {
+        console.error('Get Cart products related error...,', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Get Cart products related Server Error... '
+        });
+    }
+}
+
+
+module.exports = { createCartController,  cartProductIncreDecreController, cartProductDeleteController, getCartProductController }
