@@ -47,8 +47,8 @@ app.delete('/delete-product/:id', deleteProductController);
 
 // Cart management
 app.post('/create-cart/:userId', createCartController);
-app.post('/update-cart/:productId', cartProductIncreDecreController);
-app.delete('/delete-cart-product/:userId', cartProductDeleteController);
+app.post('/update-cart/:userId/:productId', cartProductIncreDecreController);
+app.delete('/delete-cart-product/:userId/:productId', cartProductDeleteController);
 app.get('/cart/:userId', getCartProductController)
 
 

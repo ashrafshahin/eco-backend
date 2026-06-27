@@ -27,18 +27,18 @@ const createCartController = async (req, res) => {
 
         // Update Cart or Create New Cart for choosen User..
         const existingProductsOnCart = await Cart.findOne({ user: userId, product: productId });
-       
+
         let cart;
-        
+
         // user sathe product jodi mele jai unit and price barbe...
         if (existingProductsOnCart) {
-            
+
             // akta product add holo...
             existingProductsOnCart.quantity += 1;
-            
+
             // akta product er price total price er sathe add holo...
             existingProductsOnCart.totalPrice += existingProduct.price;
-            
+
             await existingProductsOnCart.save()
 
             cart = existingProductsOnCart;
@@ -49,7 +49,7 @@ const createCartController = async (req, res) => {
                 product: productId,
                 quantity: 1,
                 totalPrice: existingProduct.price,
-                
+
             });
             await newCart.save();
 
@@ -74,24 +74,44 @@ const createCartController = async (req, res) => {
 
 const cartProductIncreDecreController = async (req, res) => {
     try {
-        const { productId } = req.params;
+        // let plus;
+        // let minus;
+        const { productId, userId } = req.params;
         const { type } = req.body;
 
+        const cartItem = await Cart.findOne({ user: userId, product: productId });
+
+        if (!cartItem) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found in cart...",
+            });
+        }
         const product = await Product.findById(productId);
-        if (type === plus) {
-            product.quantity = product.quantity + 1
-            await product.save()
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found in cart...",
+            });
+        };
+
+        if (type === 'plus') {
+            cartItem.quantity += 1
+            cartItem.totalPrice += product.price
+            await cartItem.save()
         } else {
-            product.quantity = product.quantity - 1
-            await product.save()
+            cartItem.quantity -= 1
+            cartItem.totalPrice -= product.price
+            await cartItem.save()
         }
 
         return res.status(200).json({
             success: true,
-            message: 'Cart updated successfully...'
+            message: 'Cart updated successfully...',
+            cart: cartItem,
         });
 
-        
+
     } catch (error) {
         console.error('Cart Increment Decrement related error...,', error);
         return res.status(500).json({
@@ -105,17 +125,18 @@ const cartProductIncreDecreController = async (req, res) => {
 
 const cartProductDeleteController = async (req, res) => {
     try {
-        const { productId } = req.params;
-        
-        const existingProduct = await Product.findById(productId);
-        if (!existingProduct) {
+        const { userId, productId } = req.params;
+
+        const cartItem = await Cart.findOne({ user: userId, product: productId });
+
+        if (!cartItem) {
             return res.status(404).json({
                 success: false,
-                message: 'Product not found...'
+                message: "Product not found in cart...",
             });
-        };
+        }
 
-        await Cart.findByIdAndDelete({ _id: productId });
+        await Cart.findByIdAndDelete(cartItem._id);
 
         res.status(200).json({
             success: true,
@@ -129,22 +150,21 @@ const cartProductDeleteController = async (req, res) => {
             success: false,
             message: 'Cart product delete related Server Error... '
         });
-    }  
+    }
 };
 
 const getCartProductController = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        const cart = await Cart.find({ _id: userId });
+        const cart = await Cart.find({ user: userId }).populate('product').populate('user');
 
         let totalPrice = 0;
 
         cart.map((item) => {
-            totalPrice += item.price
+            totalPrice += item.totalPrice
         });
 
-        await cart.save();
         res.status(200).json({
             success: true,
             message: 'All products on Cart...',
@@ -152,7 +172,7 @@ const getCartProductController = async (req, res) => {
             cart,
             totalPrice,
         });
-        
+
     } catch (error) {
         console.error('Get Cart products related error...,', error);
         return res.status(500).json({
@@ -163,4 +183,4 @@ const getCartProductController = async (req, res) => {
 }
 
 
-module.exports = { createCartController,  cartProductIncreDecreController, cartProductDeleteController, getCartProductController }
+module.exports = { createCartController, cartProductIncreDecreController, cartProductDeleteController, getCartProductController }

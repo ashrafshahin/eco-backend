@@ -1,0 +1,47 @@
+
+important
+
+মনে রাখার সহজ নিয়ম: findById() মানেই _id। 
+
+যদি _id ছাড়া অন্য কোনো field দিয়ে খুঁজতে চাও, তাহলে findOne() বা find() ব্যবহার করবে।
+
+== কখন findById() ব্যবহার করবে?
+যখন তোমার কাছে Cart document-এর _id থাকবে।
+const cartId = "111111111111111111111111";
+const cart = await Cart.findById(cartId);
+এটা কাজ করবে।
+
+== কখন findOne() ব্যবহার করবে?
+যখন অন্য কোনো field দিয়ে search করবে।
+Cart.findOne({ product: productId });
+Cart.findOne({ user: userId });
+Cart.findOne({
+  user: userId,
+  product: productId,
+});
+
+== সংক্ষেপে
+Method	কোন field-এ search করে
+
+1. findById(id)	শুধুমাত্র _id
+2. findOne({ product: productId })	product field
+3. findOne({ user: userId })	user field
+4. findOne({ _id: id })	findById(id)-এর সমান
+
+মনে রাখার সহজ নিয়ম: findById() মানেই _id। 
+যদি _id ছাড়া অন্য কোনো field দিয়ে খুঁজতে চাও, তাহলে findOne() বা find() ব্যবহার করবে।
+
+
+
+=======
+Q. why not findOne() = 
+because we want everything on the cart of this user...
+ai user er sokol data/product chai, of course plural hobe, 
+akta item to thake na, tai single hobe na...
+tai find() use korte hobe...
+
+const cart = await Cart.find({ user: userId })
+  .populate("product")
+  .populate("user");
+
+এখানে find() ব্যবহার করা হয়েছে কারণ একজন user-এর একাধিক cart item থাকতে পারে।
