@@ -1,8 +1,19 @@
 const axios = require('axios');
+const Cart = require('../models/cartModel');
 
 const paymentController = async (req, res) => {
     try {
-        const { amount, cus_name, cus_email, cus_add1, cus_add2, cus_city, cus_state, cus_postcode, cus_phone } = req.body;
+        const { userId, amount, cus_name, cus_email, cus_add1, cus_add2, cus_city, cus_state, cus_postcode, cus_phone } = req.body;
+        
+        const cart = await Cart.find({ user: userId }).populate('product');
+        
+        let totalPrice = 0
+
+        cart.map((item) => {
+            totalPrice += item.totalPrice
+        });
+        console.log(totalPrice);
+
         
         // transaction ID generate for Development...
         const tran_id = `TXN-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
@@ -19,7 +30,7 @@ const paymentController = async (req, res) => {
             success_url: `${process.env.SERVER_URL}/api/payment/success`,
             fail_url: `${process.env.SERVER_URL}/api/payment/fail`,
             cancel_url: `${process.env.SERVER_URL}/api/payment/cancel`,
-            amount: String(amount),
+            amount: totalPrice,
             currency: "BDT",
             signature_key: process.env.AAMARPAY_SIGNATURE_KEY,
             desc: "Merchant Registration Payment",
@@ -58,6 +69,8 @@ const paymentController = async (req, res) => {
         return res.status(200).json({
             success: true,
             data: response.data,
+            userId,
+            cartSubTotal: totalPrice
         });
 
         
