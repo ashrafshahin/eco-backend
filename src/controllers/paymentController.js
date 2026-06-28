@@ -1,29 +1,37 @@
-const { axios } = require("axios");
+const axios = require('axios');
 
 const paymentController = async (req, res) => {
     try {
-        const tran_id = `TXN-${Date.now()}-${Math.floor(
-            Math.random() * 10000
-        )}`;
+        const { amount, cus_name, cus_email, cus_add1, cus_add2, cus_city, cus_state, cus_postcode, cus_phone } = req.body;
+        
+        // transaction ID generate for Development...
+        const tran_id = `TXN-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+        
+        if (!amount || !cus_name || !cus_email || !cus_phone) {
+            return res.status(400).json({
+                success: false,
+                message: "Required fields are missing..."
+            });
+        };
         const paymentData = {
-            store_id: "aamarpaytest",
+            store_id: process.env.AAMARPAY_STORE_ID,
             tran_id: tran_id,
-            success_url: "http://www.merchantdomain.com/successpage.html",
-            fail_url: "http://www.merchantdomain.com/failedpage.html",
-            cancel_url: "http://www.merchantdomain.com/cancelpage.html",
-            amount: "10.0",
+            success_url: `${process.env.SERVER_URL}/api/payment/success`,
+            fail_url: `${process.env.SERVER_URL}/api/payment/fail`,
+            cancel_url: `${process.env.SERVER_URL}/api/payment/cancel`,
+            amount: String(amount),
             currency: "BDT",
-            signature_key: "dbb74894e82415a2f7ff0ec3a97e4183",
+            signature_key: process.env.AAMARPAY_SIGNATURE_KEY,
             desc: "Merchant Registration Payment",
-            cus_name: "Name",
-            cus_email: "payer@merchantcustomer.com",
-            cus_add1: "House B-158 Road 22",
-            cus_add2: "Mohakhali DOHS",
-            cus_city: "Dhaka",
-            cus_state: "Dhaka",
-            cus_postcode: "1206",
+            cus_name: cus_name,
+            cus_email: cus_email,
+            cus_add1: cus_add1,
+            cus_add2: cus_add2,
+            cus_city: cus_city,
+            cus_state: cus_state,
+            cus_postcode: cus_postcode,
             cus_country: "Bangladesh",
-            cus_phone: "+8801704",
+            cus_phone: cus_phone,
             type: "json",
         };
 
@@ -36,6 +44,16 @@ const paymentController = async (req, res) => {
                 },
             }
         );
+
+        if (!response.data.result) {
+            return res.status(400).json({
+                success: false,
+                message: "Payment initialization failed...",
+                data: response.data
+            });
+        };
+
+        console.log(response.data);
 
         return res.status(200).json({
             success: true,

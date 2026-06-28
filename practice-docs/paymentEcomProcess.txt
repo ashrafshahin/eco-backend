@@ -1,0 +1,107 @@
+
+
+Single e-commerce project-এর জন্য **best practice flow** হলো **আগে Order create করবে, তারপর Order ID-কে `tran_id` হিসেবে ব্যবহার করবে।** এতে payment tracking অনেক সহজ হয়।
+
+## Step 1: Order Create ===
+
+javascript
+----------
+const order = await Order.create({
+    user: req.user._id,
+    products: cartProducts,
+    totalAmount: totalPrice,
+    paymentStatus: "pending",
+    orderStatus: "pending",
+});
+
+
+---
+
+## Step 2: Order ID-কে `tran_id` হিসেবে পাঠাও ===
+
+
+javascript
+-----------
+const paymentData = {
+    store_id: process.env.AAMARPAY_STORE_ID,
+    signature_key: process.env.AAMARPAY_SIGNATURE_KEY,
+
+    tran_id: order._id.toString(),
+
+    success_url: `${process.env.SERVER_URL}/api/payment/success`,
+    fail_url: `${process.env.SERVER_URL}/api/payment/fail`,
+    cancel_url: `${process.env.SERVER_URL}/api/payment/cancel`,
+
+    amount: order.totalAmount,
+    currency: "BDT",
+
+    desc: `Order #${order._id}`,
+
+    cus_name: user.name,
+    cus_email: user.email,
+    cus_phone: user.phone,
+
+    cus_add1: user.address,
+    cus_city: user.city,
+    cus_country: "Bangladesh",
+
+    type: "json",
+};
+
+---
+
+## Step 3: Success Callback ===
+
+AamarPay success callback-এ:
+
+javascript
+----------
+const successPayment = async (req, res) => {
+    const { mer_txnid } = req.body;
+
+    const order = await Order.findById(mer_txnid);
+
+    if (!order) {
+        return res.status(404).json({
+            success: false,
+            message: "Order not found",
+        });
+    }
+
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+
+    await order.save();
+
+    res.redirect(`${process.env.CLIENT_URL}/payment/success`);
+};
+
+---
+
+## Database Flow
+
+User Checkout
+      │
+      ▼
+Create Order
+      │
+      ▼
+Order._id = 68612ab34d5ef67890123456
+      │
+      ▼
+tran_id = 68612ab34d5ef67890123456
+      │
+      ▼
+AamarPay
+      │
+      ▼
+Success Callback
+      │
+      ▼
+Order.findById(mer_txnid)
+      │
+      ▼
+paymentStatus = "paid"
+```
+
+এটাই বেশিরভাগ MERN e-commerce project-এর standard approach। আলাদা random transaction ID generate করার দরকার হয় না, কারণ `Order._id` নিজেই unique এবং callback-এর সময় order খুঁজে বের করা খুব সহজ হয়।
