@@ -1,0 +1,28 @@
+onst order = await new Order({
+            user: userId,
+            products: product,
+            cartSubTotal: totalPrice,
+            tranId: tran_id,
+        }).save(); ai error dese Order validation failed: products.0.images: Cast to string failed for value "[
+  {
+    url: '/uploads/products/1782557842734-812196805-iPhone2.webp',
+    isMain: true,
+    _id: new ObjectId('6a3fac92a8b50552ce5ae170')
+  }
+]" (type Array) at path "images", products.1.images: Cast to string failed for value "[
+  {
+    url: '/uploads/products/1782557785137-513303096-iphone1.jpeg',
+    isMain: true,
+    _id: new ObjectId('6a3fac59a8b50552ce5ae16d')
+  },
+  {
+    url: '/uploads/products/1782557785142-146279630-imageedit_0_6298133343.png',
+    isMain: false,
+    _id: new ObjectId('6a3fac59a8b50552ce5ae16e')
+  }
+]" (type Array) at path "images"
+
+solution--
+schema te images String kore rakcilam, 
+it should be Array... url String and Boolean...
+

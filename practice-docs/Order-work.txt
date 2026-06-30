@@ -1,0 +1,190 @@
+payment work flow
+1. payment controller step-1 we made payment data 
+2. payment controller step-2 we collect all product details on cart with cart total.
+3. sandbox link will come... order pending here...
+4. to Save the order - we will do OrderSchema now...
+5. order schema te ja thakbe all keys will be saved in MongoDB...
+6. order pending but saved hoise...
+7. 
+
+
+
+
+== aita run korle ===
+const cart = await Cart.find({ user: userId }).populate('product');
+        
+        let totalPrice = 0
+        let product = []
+
+        cart.map((item) => {
+            const productDetails = { ...item.product };
+            productDetails.quantity = item.quantity
+            productDetails.totalPrice = item.totalPrice
+            product.push(productDetails)
+            
+            totalPrice += item.totalPrice
+        });
+        console.log(product);
+        
+        console.log(totalPrice);
+
+        === result ===
+
+   ecoBazaar database connected...
+[
+  {
+    '$__': InternalCache {
+      activePaths: [ctor],
+      skipId: true,
+      wasPopulated: [Object],
+      parent: [Object]
+    },
+    '$isNew': false,
+    _doc: {
+      _id: new ObjectId('6a3fac92a8b50552ce5ae16f'),
+      title: 'iPhone two',
+      sku: 'Eco2026-42797-764',
+      description: 'latest apple phone 200',
+      price: 320000,
+      discountPrice: 0,
+      stock: 0,
+      category: 'electronics',
+      tags: [],
+      status: 'pending',
+      images: [Array],
+      averageRating: 0,
+      numReviews: 0,
+      createdAt: 2026-06-27T10:57:22.855Z,
+      updatedAt: 2026-06-27T10:57:22.855Z,
+      __v: 0
+    },
+    quantity: 2,
+    totalPrice: 640000
+  },
+  {
+    '$__': InternalCache {
+      activePaths: [ctor],
+      skipId: true,
+      wasPopulated: [Object],
+      parent: [Object]
+    },
+    '$isNew': false,
+    _doc: {
+      _id: new ObjectId('6a3fac59a8b50552ce5ae16c'),
+      title: 'iPhone One 1',
+      sku: 'Eco2026-85220-519',
+      description: 'latest apple phone 111',
+      price: 150000,
+      discountPrice: 0,
+      stock: 0,
+      category: 'electronics',
+      tags: [],
+      status: 'pending',
+      images: [Array],
+      averageRating: 0,
+      numReviews: 0,
+      createdAt: 2026-06-27T10:56:25.269Z,
+      updatedAt: 2026-06-27T10:56:25.269Z,
+      __v: 0
+    },
+    quantity: 1,
+    totalPrice: 150000
+  }
+]
+790000
+
+     === xxx ===
+
+
+ const cart = await Cart.find({ user: userId }).populate('product');
+
+        let totalPrice = 0
+        let product = []
+
+        cart.map((item) => {
+            // const productDetails = { ...item.product };
+            product.push({
+                title: item.product.title,
+                price: item.product.price,
+                sku: item.product.sku,
+                description: item.product.description,
+                stock: item.product.stock,
+                discountPrice: item.product.discountPrice,
+                images: item.product.images,
+                category: item.product.category,
+                quantity: item.quantity,
+                totalPrice: item.totalPrice,
+
+            });
+
+            totalPrice += item.totalPrice
+
+            // productDetails.quantity = item.quantity
+            // productDetails.totalPrice = item.totalPrice
+            // product.push(productDetails)
+
+            // console.log(productDetails);
+
+        });
+        console.log(product);
+
+        console.log(totalPrice);
+
+         res.send({
+            product: product,
+            cartSubTotal: totalPrice
+        });
+
+
+ === result ===
+
+{
+    "product": [
+        {
+            "title": "iPhone two",
+            "price": 320000,
+            "sku": "Eco2026-42797-764",
+            "description": "latest apple phone 200",
+            "stock": 0,
+            "discountPrice": 0,
+            "images": [
+                {
+                    "url": "/uploads/products/1782557842734-812196805-iPhone2.webp",
+                    "isMain": true,
+                    "_id": "6a3fac92a8b50552ce5ae170"
+                }
+            ],
+            "category": "electronics",
+            "quantity": 2,
+            "totalPrice": 640000
+        },
+        {
+            "title": "iPhone One 1",
+            "price": 150000,
+            "sku": "Eco2026-85220-519",
+            "description": "latest apple phone 111",
+            "stock": 0,
+            "discountPrice": 0,
+            "images": [
+                {
+                    "url": "/uploads/products/1782557785137-513303096-iphone1.jpeg",
+                    "isMain": true,
+                    "_id": "6a3fac59a8b50552ce5ae16d"
+                },
+                {
+                    "url": "/uploads/products/1782557785142-146279630-imageedit_0_6298133343.png",
+                    "isMain": false,
+                    "_id": "6a3fac59a8b50552ce5ae16e"
+                }
+            ],
+            "category": "electronics",
+            "quantity": 1,
+            "totalPrice": 150000
+        }
+    ],
+    "cartSubTotal": 790000
+}
+
+=== xxx ===
+
+

@@ -1,0 +1,33 @@
+we can save data in database wrinting in 3 different ways
+
+way-1
+------ await age deye, .save() kore deya jai... -------
+const order = await new Order({
+            user: userId,
+            products: product,
+            cartSubTotal: totalPrice,
+            tranId: tran_id,
+        }).save();
+
+
+way-2
+------ await  order.save() kore deya jai... -------
+const order = new Order({
+            user: userId,
+            products: product,
+            cartSubTotal: totalPrice,
+            tranId: tran_id,
+        });
+await order.save();
+
+
+way-3
+------ await er por schema name then create() use kore, 
+here, .save() kora lagbe na... -------
+
+const order = await Order.create({
+            user: userId,
+            products: product,
+            cartSubTotal: totalPrice,
+            tranId: tran_id,
+        });
