@@ -1,0 +1,136 @@
+
+----- xxx ----
+
+One more important thing (Best Practice)
+Never calculate discounts in the Cart or Order.
+Only calculate the discount when the product is created or updated, then save the result in salePrice.
+
+Your flow should be:
+
+Admin
+   ↓
+Create/Update Product
+   ↓
+Calculate salePrice
+   ↓
+Save in MongoDB
+   ↓
+Frontend reads salePrice
+   ↓
+Cart uses salePrice
+   ↓
+Order uses salePrice
+   ↓
+Payment uses salePrice
+
+This keeps the cart, checkout, and payment logic simple and avoids recalculating discounts repeatedly.
+
+-----xxxx-----
+
+সঠিক কোড:
+
+// Discount related work...
+const updateData = { ...req.body };
+
+const price = updateData.price ?? product.price;
+const discount = updateData.discount ?? product.discount;
+
+updateData.salePrice = calculateSalePrice(price, discount);
+কেন ?? ব্যবহার করছি?
+const price = updateData.price ?? product.price;
+
+এর মানে:
+
+যদি request-এ নতুন price আসে → সেটা ব্যবহার করবে।
+না এলে → database-এর পুরনো product.price ব্যবহার করবে।
+
+একইভাবে:
+
+const discount = updateData.discount ?? product.discount;
+নতুন discount এলে → সেটা ব্যবহার করবে।
+না এলে → পুরনো discount ব্যবহার করবে।
+
+
+
+
+----- xxxx -------
+return Math.max(Math.round(salePrice), 0);
+---
+Math.round() - এটা decimal number-কে nearest integer বানায়।
+Math.round(99.2) = 100 kore debe
+
+--
+Math.max() - এটা দুইটার মধ্যে বড় number return করে। 
+    i. Math.max(100, 0) = 100 k nibe
+    ii. Math.max(-50, 0) = 0 k nibe 
+big number ta pick korbe...
+--
+---
+Price = 500
+Flat Discount = 700
+Calculation
+500 - 700 = -200
+Negative price কখনোই valid না।
+Math.max(-200, 0) Return করবে 0
+---
+
+
+
+
+----- xxxx --------
+
+
+Best Architecture of Discount price:
+------------------------------------
+src/
+│
+├── controllers/
+│   ├── productController.js
+│
+├── utils/
+│   ├── calculateSalePrice.js
+│
+├── models/
+│   ├── Product.js
+
+
+
+
+------- xxxxx ---------
+Literature on Discount Price on Ecommerce platforms:
+
+Ecommerce websites use various price discounts to drive sales, clear inventory, and boost average order value. 
+
+The most effective types include percentage-off (classic X% off), fixed cash (dollar-off), BOGO deals, free shipping thresholds, and bundled pricing.
+
+Strategic discounting influences buyer psychology and improves conversion rates. The most common types of price promotions used by online retailers include:
+
+1. Direct & Quantitative Reductions
+
+   i. Percentage Discounts: The most common approach (e.g., "20% off sitewide"). Often preferred by shoppers for smaller or moderately priced items.
+    
+    ii. Fixed Amount / Cash Discounts: Flat reductions (e.g., "$10 off orders over $75"). This works exceptionally well for higher-priced items as it feels more tangible.
+
+2. Value-Added & Grouped Offers
+
+    i. Bundle Discounts: Grouping complementary products together for a lower overall price than purchasing them individually. This boosts the Average Order Value (AOV).
+
+    ii. BOGO (Buy One Get One) / Multi-Tiered Promotions: Rewards customers for buying larger quantities (e.g., "Buy 1 Get 1 50% off" or "3 for 2"). Excellent for clearing out excess stock.
+    
+    iii. Free Shipping Thresholds: Removing shipping fees when a user reaches a specific cart total.
+
+3. Exclusivity & Behavioral Triggers
+
+    i. Coupon Codes / Promo Codes: Alphanumeric codes entered at checkout. Ideal for rewarding email subscribers or applying influencer campaigns.
+    
+    ii. Loyalty & Membership Discounts: Ecosystem-style perks (e.g., early access, member-only deals) utilized by services like Amazon Prime to build repeat business.
+    
+    iii. First-Time Buyer / Abandoned Cart Offers: Tailored, targeted discounts sent to new visitors (e.g., pop-ups) or users who left items in their digital carts.
+
+4. Time-Sensitive Tactics
+
+    i. Flash Sales & Countdown Timers: Deep, short-term discounts (e.g., "50% off for the next 2 hours"). These create natural urgency.
+    
+    ii. Seasonal & Event Sales: Promotions timed around holidays like Black Friday or regional festivals to capture seasonal spending spikes.
+
+Understanding which discount fits your specific audience can help maximize sales without heavily diluting your brand's value...

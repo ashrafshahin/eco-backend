@@ -1,0 +1,208 @@
+discountPrice test: form-data  aivabe likte hobe
+value:  {"type":"percentage","value":20} and   type: text
+
+result:
+{
+    "success": true,
+    "message": "New Product Uploaded successfully...",
+    "product": {
+        "title": "iPhone 20 Pro Discounted",
+        "sku": "Eco2026-13426-561",
+        "description": "latest apple iPhone Discounted with discount in create testing...",
+        "price": 300000,
+        "discountPrice": {
+            "type": "percentage",
+            "value": 20
+        },
+        "salePrice": 240000,
+        "stock": 50,
+        "category": "mobile",
+        "tags": [],
+        "status": "pending",
+        "images": [
+            {
+                "url": "/uploads/products/1782988713356-377430593-iphone-17-pro-max.jpeg",
+                "isMain": true,
+                "_id": "6a463fa91043c0e354fce407"
+            }
+        ],
+        "averageRating": 0,
+        "numReviews": 0,
+        "_id": "6a463fa91043c0e354fce406",
+        "createdAt": "2026-07-02T10:38:33.511Z",
+        "updatedAt": "2026-07-02T10:38:33.511Z",
+        "__v": 0
+    }
+}
+
+---- xxx ----
+
+discountPrice test: form-data  aivabe likte hobe
+value:  {"type":"flat","value":25000} and   type: text
+result--
+{
+    "success": true,
+    "message": "New Product Uploaded successfully...",
+    "product": {
+        "title": "iPhone 16 Pro Discounted",
+        "sku": "Eco2026-38423-554",
+        "description": "latest apple iPhone Discounted with discount in create testing...",
+        "price": 1750000,
+        "discountPrice": {
+            "type": "flat",
+            "value": 25000
+        },
+        "salePrice": 1725000,
+        "stock": 50,
+        "category": "mobile",
+        "tags": [],
+        "status": "pending",
+        "images": [
+            {
+                "url": "/uploads/products/1782989338366-855754044-iphone-17-pro-max.jpeg",
+                "isMain": true,
+                "_id": "6a46421a1043c0e354fce409"
+            }
+        ],
+        "averageRating": 0,
+        "numReviews": 0,
+        "_id": "6a46421a1043c0e354fce408",
+        "createdAt": "2026-07-02T10:48:58.480Z",
+        "updatedAt": "2026-07-02T10:48:58.480Z",
+        "__v": 0
+    }
+}
+
+---- xxxx ----
+
+Use these values in your form-data discount field.
+
+Percentage Discount
+{"type":"percentage","value":20}
+Flat Discount
+{"type":"flat","value":100}
+No Discount
+{"type":"none","value":0}
+
+---- xxxx ----
+
+Percentage Discount with Date Range
+
+{"type":"percentage","value":20,"startDate":"2026-07-01T00:00:00.000Z","endDate":"2026-07-31T23:59:59.000Z"}
+
+Flat Discount with Date Range
+
+{"type":"flat","value":100,"startDate":"2026-07-01T00:00:00.000Z","endDate":"2026-07-31T23:59:59.000Z"}
+
+These should be sent as the value of the discount field (Type: Text) in Postman.
+
+
+3 --- xxx --- important error ---
+
+ValidationError: Validation failed: images.0: value.validate is not a function
+    at model.Query.validate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:4187:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async model.Query._findOneAndUpdate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:3614:5)
+    at async model.Query.exec (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:4797:63)
+    at async updateProductController (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/src/controllers/productController.js:150:25) {
+  errors: {
+    'images.0': TypeError: value.validate is not a function
+        at SchemaDocumentArrayElement.doValidate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/schema/subdocument.js:293:17)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+      path: 'images.0'
+    }
+  },
+  _message: 'Validation failed'
+} Update Product related error...
+(node:6674) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6674) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:6674) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+[nodemon] restarting due to changes...
+[nodemon] starting `node index.js`
+◇ injected env (7) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+env file connected...
+[nodemon] restarting due to changes...
+[nodemon] starting `node index.js`
+◇ injected env (7) from .env // tip: ⌘ suppress logs { quiet: true }
+env file connected...
+[nodemon] restarting due to changes...
+[nodemon] starting `node index.js`
+◇ injected env (7) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+env file connected...
+Server Running on port 5000 ...
+ecoBazaar database connected...
+[Object: null prototype] {
+  title: 'iPhone 16 Pro Discounted',
+  description: 'latest apple iPhone Discounted with discount in create testing...',
+  price: '175000',
+  category: 'mobile',
+  stock: '50',
+  discount: '{"type":"flat","value":30000}'
+}
+[
+  {
+    fieldname: 'images',
+    originalname: 'iphone-17-pro-max.jpeg',
+    encoding: '7bit',
+    mimetype: 'text/plain',
+    path: 'uploads/products/1782991275959-151345756-iphone-17-pro-max.jpeg',
+    destination: './uploads/products',
+    filename: '1782991275959-151345756-iphone-17-pro-max.jpeg',
+    size: 56646
+  },
+  {
+    fieldname: 'images',
+    originalname: 'iPhone2.webp',
+    encoding: '7bit',
+    mimetype: 'text/plain',
+    path: 'uploads/products/1782991275961-617774225-iPhone2.webp',
+    destination: './uploads/products',
+    filename: '1782991275961-617774225-iPhone2.webp',
+    size: 34646
+  }
+]
+(node:6997) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+-- solve --
+The problem is that your controller never converts req.files into the images format expected by your schema.
+So when files are uploaded, they are never assigned to updateData.images.
+{
+     returnDocument: "after",
+    runValidators: true,
+         },
+
+SHOULD USE THIS - RECOMMENDED...
+
+--
+Now look at your controller:
+
+Earlier you showed:
+const { title, price, category, discount } = req.body;
+
+and later
+
+let parsedDiscount = discount;
+
+So your controller is reading:
+
+req.body.discount
+
+NOT
+
+req.body.discountPrice
+
+Therefore:
+
+When you send
+
+discount
+✅ it works.
+
+When you send
+
+discountPrice
+discount becomes 
+undefined
+

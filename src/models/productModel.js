@@ -24,11 +24,28 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
+
+// ----- discount er kaj ---- ...//
     discountPrice: {
-        type: Number,
-        min: 0,
-        default: 0,
+        type: {
+            type: String,
+            enum: ['none', 'percentage', 'flat'],
+            default: 'none',
+        },
+        value: {
+            type: Number,
+            default: 0,
+            min: 0,
+        },
+        startDate: Date,
+        endDate: Date,
     },
+
+    salePrice: {
+        type: Number,
+        required: true,
+    },
+    // ----- discount er kaj ends... ----- //
 
     stock: {
         type: Number,

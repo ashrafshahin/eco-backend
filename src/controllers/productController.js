@@ -1,10 +1,11 @@
 const Product = require('../models/productModel');
+const calculateSalePrice = require('../utils/calculateSalesPrice');
 const { emptyFieldValidation } = require('../utils/validation');
 const mongoose = require('mongoose');
 
-const createProductController = async (req, res) => { 
+const createProductController = async (req, res) => {
     try {
-        const { title, price, category } = req.body;
+        const { title, price, category, discount } = req.body;
 
         // empty field check kora
         emptyFieldValidation(res, title, price, category);
@@ -39,10 +40,29 @@ const createProductController = async (req, res) => {
             }
         })
 
+        // Discount Price work... did this for form data format...
+        let parsedDiscount = discount;
+
+        if (typeof discount === "string") {
+            try {
+                parsedDiscount = JSON.parse(discount);
+            } catch (error) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid discount format..."
+                });
+            };
+        };
+
+        // const salePrice = calculateSalePrice(price, discount);
+        const salePrice = calculateSalePrice(Number(price), parsedDiscount);
+
         const newProduct = new Product({
             ...req.body,
-            sku: sku,
+            discountPrice: parsedDiscount, 
+            sku,
             images: formattedImages,
+            salePrice,
         })
 
         await newProduct.save()
@@ -57,7 +77,7 @@ const createProductController = async (req, res) => {
         console.log(error, 'New Product upload related error...');
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
-}
+};
 
 const getAllProductsController = async (req, res) => {
     try {
@@ -72,7 +92,7 @@ const getAllProductsController = async (req, res) => {
         console.log(error, 'Get All Products related error...');
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
-}
+};
 
 const getSingleProductController = async (req, res) => {
     try {
@@ -92,15 +112,53 @@ const getSingleProductController = async (req, res) => {
         console.log(error, 'Get single Product related error...');
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
-}
+};
 
 const updateProductController = async (req, res) => {
     try {
         const { id } = req.params
-        const product = await Product.findByIdAndUpdate(id, req.body, { new: true });
-        if (!product) {
-            return res.status(404).json({ success: false, message: 'Product not found...' })
-        }
+        const existingProduct = await Product.findById(id);
+        if (!existingProduct) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found...'
+            })
+        };
+
+        // update data... Discount related work... //
+        const updateData = { ...req.body };
+
+        let parsedDiscount = updateData.discount;
+
+        if (typeof parsedDiscount === 'string') {
+            try {
+                parsedDiscount = JSON.parse(parsedDiscount);
+            } catch (error) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid discount format..."
+                });
+            };
+        };
+
+        const price = Number(updateData.price ?? existingProduct.price);
+        const discount = parsedDiscount ?? existingProduct.discountPrice;
+
+        updateData.discountPrice = discount;
+        updateData.salePrice = calculateSalePrice(price, discount);
+
+        // console.log(req.body);
+        // console.log(req.files);
+        
+        const product = await Product.findByIdAndUpdate(
+            id,
+            updateData,
+            {
+                returnDocument: "after",
+                runValidators: true,
+            },
+        );
+
         return res.status(200).json({
             success: true,
             message: 'Product updated successfully...',
@@ -111,7 +169,7 @@ const updateProductController = async (req, res) => {
         console.log(error, 'Update Product related error...');
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
-}
+};
 
 const deleteProductController = async (req, res) => {
     try {
@@ -130,7 +188,7 @@ const deleteProductController = async (req, res) => {
         console.log(error, 'Delete Product related error...');
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
-}
+};
 
 const updateMainImageController = async (req, res) => {
     try {
@@ -162,7 +220,7 @@ const updateMainImageController = async (req, res) => {
         // all image false korte hobe step-2
         let targetImage = false;
 
-            // all image false korte hobe step-2
+        // all image false korte hobe step-2
         product.images.forEach((image) => {
             image.isMain = false
 
@@ -194,7 +252,7 @@ const updateMainImageController = async (req, res) => {
         console.log(error, 'Update Main Image related error...');
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
-}
+};
 
 
 module.exports = { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController }
