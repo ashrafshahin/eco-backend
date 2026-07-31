@@ -55,7 +55,7 @@ const createCartController = async (req, res) => {
 
             // existingProductsOnCart.totalPrice += existingProduct.price;
             existingProductsOnCart.totalPrice = effectivePrice * existingProductsOnCart.quantity;
-            
+
             await existingProductsOnCart.save();
 
             cart = existingProductsOnCart;

@@ -1,5 +1,5 @@
 const Product = require('../models/productModel');
-const calculateSalePrice = require('../utils/calculateSalesPrice');
+const calculateSalePrice = require('../utils/calculateSalePrice');
 const { emptyFieldValidation } = require('../utils/validation');
 const mongoose = require('mongoose');
 
@@ -41,7 +41,7 @@ const createProductController = async (req, res) => {
         })
 
         // Discount Price work... did this for form data format...
-        
+
         let parsedDiscount = discount;
 
         if (typeof discount === "string") {
@@ -60,7 +60,7 @@ const createProductController = async (req, res) => {
 
         const newProduct = new Product({
             ...req.body,
-            discountPrice: parsedDiscount, 
+            discountPrice: parsedDiscount,
             sku,
             images: formattedImages,
             salePrice,
@@ -148,7 +148,7 @@ const updateProductController = async (req, res) => {
 
         updateData.discountPrice = discount;
         updateData.salePrice = calculateSalePrice(price, discount);
-        
+
         const product = await Product.findByIdAndUpdate(
             id,
             updateData,
