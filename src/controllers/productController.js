@@ -21,7 +21,7 @@ const createProductController = async (req, res) => {
         const existingTitle = await Product.findOne({ title });
         if (existingTitle) {
             return res.status(409).json({ success: false, message: 'Product can not be duplicated...' })
-        }
+        };
 
         // custom SKU create korbe
         const sku = `Eco${new Date().getFullYear()}-${Date.now().toString().slice(-5)}-${Math.floor(100 + Math.random() * 900)}`;
@@ -30,7 +30,7 @@ const createProductController = async (req, res) => {
         const existingSku = await Product.findOne({ sku });
         if (existingSku) {
             return res.status(409).json({ success: false, message: 'Product SKU can not be duplicated...' })
-        }
+        };
 
         // images upload korar jonno...
         const formattedImages = req.files.map((file, index) => {
@@ -41,6 +41,7 @@ const createProductController = async (req, res) => {
         })
 
         // Discount Price work... did this for form data format...
+        
         let parsedDiscount = discount;
 
         if (typeof discount === "string") {
@@ -141,14 +142,12 @@ const updateProductController = async (req, res) => {
             };
         };
 
+        // নতুন value থাকলে সেটা ব্যবহার করবে, না থাকলে database - এর পুরনো value ব্যবহার করবে।
         const price = Number(updateData.price ?? existingProduct.price);
         const discount = parsedDiscount ?? existingProduct.discountPrice;
 
         updateData.discountPrice = discount;
         updateData.salePrice = calculateSalePrice(price, discount);
-
-        // console.log(req.body);
-        // console.log(req.files);
         
         const product = await Product.findByIdAndUpdate(
             id,

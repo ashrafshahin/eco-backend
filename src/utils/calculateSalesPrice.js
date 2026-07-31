@@ -3,7 +3,7 @@ const calculateSalePrice = (price, discount) => {
     let salePrice = price ;
 
     if (!discount || discount.type === 'none') {
-        return salePrice
+        return Math.round(salePrice * 100) / 100;
     };
 
     const now = new Date();
@@ -11,10 +11,9 @@ const calculateSalePrice = (price, discount) => {
     if (
         discount.startDate &&
         discount.endDate &&
-        (now < new Date(discount.startDate) ||
-            now > new Date(discount.endDate))
+        (now < new Date(discount.startDate) || now > new Date(discount.endDate))
     ) {
-        return salePrice;
+        return Math.round(salePrice * 100) / 100;
     };
 
     if (discount.type === 'percentage') {
@@ -28,7 +27,7 @@ const calculateSalePrice = (price, discount) => {
         salePrice = price - discount.value
     };
 
-    return Math.max(salePrice, 0);
+    return Math.round(Math.max(salePrice, 0) * 100) / 100;
 
 };
 

@@ -36,6 +36,14 @@ const productSchema = new Schema({
             type: Number,
             default: 0,
             min: 0,
+            validate: {
+                validator: function(discountValue) {
+                    if (this.type === 'percentage') return discountValue <= 100;
+                    return true;
+                },
+                message: 'percentage discount cannot exceed 100...',
+
+            },
         },
         startDate: Date,
         endDate: Date,
@@ -117,5 +125,15 @@ const productSchema = new Schema({
 
 }, { timestamps: true });
 
+productSchema.pre('validate', function (discountValue) {
+    const discountDate = this.discountPrice;
+    if (
+        discountDate?.startDate &&
+        discountDate?.endDate &&
+        new Date(discountDate.startDate) >= new Date(discountDate.endDate)
+    ) {
+        throw new Error('discountPrice.endDate must be after startDate...');
+    }
+});
 
 module.exports = mongoose.model('Product', productSchema)

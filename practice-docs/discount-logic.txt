@@ -1,0 +1,65 @@
+
+এই দুই লাইন মূলত update করার সময় নতুন value থাকলে সেটা ব্যবহার করবে, না থাকলে database-এর পুরনো value ব্যবহার করবে।
+
+const price = Number(updateData.price ?? existingProduct.price);
+const discount = parsedDiscount ?? existingProduct.discountPrice;
+
+
+====
+কেন ?? ব্যবহার করা হয়েছে?
+কারণ || ব্যবহার করলে 0 সমস্যা করবে।
+updateData.price = 0
+যদি লিখো
+updateData.price || existingProduct.price
+তাহলে result হবে
+existingProduct.price
+কারণ 0 falsy।
+====
+
+এই pattern কেন best practice?
+
+const price = Number(updateData.price ?? existingProduct.price);
+const discount = parsedDiscount ?? existingProduct.discountPrice;
+
+updateData.salePrice = calculateSalePrice(price, discount);
+
+এভাবে করলে:
+
+✅ User শুধু price update করলেও salePrice automatically update হবে।
+✅ User শুধু discountPrice update করলেও salePrice automatically update হবে।
+✅ User দুটোই update করলেও ঠিকমতো calculate হবে।
+✅ User কোনোটাই update না করলে existing values দিয়েই calculation হবে, তাই data consistent থাকবে।
+
+এটাই production-grade update logic, কারণ partial updates (PATCH) সঠিকভাবে handle করতে পারে।
+
+
+Everything's inside one {} block, in one loop: the existence check, stock check, price calculation, and pushing to the product[] array all happen for each item before moving to the next iteration. So item 1 gets checked and priced completely, then item 2, then item 3 — no crossover, no leftover variable from a previous item leaking into the next.
+
+2. No .map() needed: .map() is for when you want to transform an array into a new array and return that new array (e.g. const doubled = numbers.map(n => n * 2)). Here, you're not just transforming — you're doing validation (which needs early return to stop the whole request), building up a running total (totalPrice +=), and pushing into an existing array (product.push(...)). None of that is a clean "transform each item" operation, and .map() doesn't support early-returning out of the entire function the way a plain for...of loop does. That's actually the root cause of needing two separate loops before — someone probably reached for .map() out of habit, then had to split logic across two passes because .map() couldn't handle the return res.status(...) early exits.
+
+Rule of thumb going forward: if you need to return early (stop the whole function) partway through processing items, use for...of (or a plain for loop) — not .map(), .forEach(), or .filter(). Those array methods can't stop the outer function early; a return inside their callback only exits that one callback call, not your controller.
+
+
+
+
+Yes — your discount work is complete. Here's the full checklist of what you built and fixed, confirming nothing discount-related is left open:
+
+✅ Schema — discountPrice object (type: none/percentage/flat, value, startDate, endDate), with validation: percentage capped at 100, endDate must be after startDate
+
+✅ calculateSalePrice — pure function, checks the date window (so a discount outside its active dates doesn't apply), handles both percentage and flat types, rounds consistently on every return path
+
+✅ Product create controller — parses discount from form-data, computes salePrice server-side via calculateSalePrice, never trusts client-sent price
+
+✅ Product update controller — merges new price/discount with existing DB values (handles partial updates correctly), recomputes salePrice fresh every time
+
+✅ Cart add controller — computes effectivePrice via calculateSalePrice, full recompute of totalPrice (not incremental +=) so it can never drift from the live discount state
+
+✅ Cart get controller — recomputes price live on every read, never trusts stored totalPrice
+
+✅ Cart increment/decrement controller — same live recompute pattern, plus stock guard and safe removal at quantity 1
+
+✅ Payment/order controller — re-validates stock and recalculates price one final time per item, right before charging, ignoring any cached cart values — this is the value that actually gets sent to the payment gateway and frozen into the order
+
+The one consistent principle across all of it: price and discount can change at any moment (admin edits, discount windows opening/closing), so anywhere money is calculated, you recompute live from the source of truth (the Product document) instead of trusting anything cached. You applied that correctly at every layer.
+
+The stock decrement / payment-success-callback work we're about to start is a separate concern (inventory management, not discount pricing) — so it's fair to consider the discount portion of this project fully done and move on with a clean slate.

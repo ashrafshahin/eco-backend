@@ -1,7 +1,9 @@
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 const User = require('../models/userModel');
+const calculateSalePrice = require('../utils/calculateSalePrice');
 
+// aitai addToCart controller...
 const createCartController = async (req, res) => {
     try {
         const { productId } = req.body;
@@ -24,6 +26,19 @@ const createCartController = async (req, res) => {
                 message: 'User not found...'
             });
         };
+        // stock check ? — worth adding since you're incrementing quantity
+        if (existingProduct.stock < 1) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product out of stock...'
+            });
+        };
+
+        // discount-aware price — recalculated live, never trust stored salePrice..
+        const effectivePrice = calculateSalePrice(
+            existingProduct.price,
+            existingProduct.discountPrice,
+        );
 
         // Update Cart or Create New Cart for choosen User..
         const existingProductsOnCart = await Cart.findOne({ user: userId, product: productId });
@@ -33,13 +48,15 @@ const createCartController = async (req, res) => {
         // user sathe product jodi mele jai unit and price barbe...
         if (existingProductsOnCart) {
 
-            // akta product add holo...
             existingProductsOnCart.quantity += 1;
 
-            // akta product er price total price er sathe add holo...
-            existingProductsOnCart.totalPrice += existingProduct.price;
+            // recompute totalPrice from scratch using effectivePrice * new quantity —
+            // don't just += the old price, since discount may have changed since last add
 
-            await existingProductsOnCart.save()
+            // existingProductsOnCart.totalPrice += existingProduct.price;
+            existingProductsOnCart.totalPrice = effectivePrice * existingProductsOnCart.quantity;
+            
+            await existingProductsOnCart.save();
 
             cart = existingProductsOnCart;
 
@@ -48,7 +65,7 @@ const createCartController = async (req, res) => {
                 user: userId,
                 product: productId,
                 quantity: 1,
-                totalPrice: existingProduct.price,
+                totalPrice: effectivePrice,
 
             });
             await newCart.save();
@@ -74,8 +91,6 @@ const createCartController = async (req, res) => {
 
 const cartProductIncreDecreController = async (req, res) => {
     try {
-        // let plus;
-        // let minus;
         const { productId, userId } = req.params;
         const { type } = req.body;
 
@@ -95,15 +110,38 @@ const cartProductIncreDecreController = async (req, res) => {
             });
         };
 
+        const effectivePrice = calculateSalePrice(product.price, product.discountPrice);
+
         if (type === 'plus') {
-            cartItem.quantity += 1
-            cartItem.totalPrice += product.price
-            await cartItem.save()
+            if (product.stock < cartItem.quantity + 1) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Not enough stock for ${product.title}...`,
+                });
+            };
+            cartItem.quantity += 1;
+            cartItem.totalPrice = effectivePrice * cartItem.quantity;
+            await cartItem.save();
+
+        } else if (type === 'minus') {
+            if (cartItem.quantity <= 1) {
+                await Cart.findByIdAndDelete(cartItem._id);
+                return res.status(200).json({
+                    success: true,
+                    message: 'Item removed from cart...',
+                    cart: null,
+                });
+            }
+            cartItem.quantity -= 1;
+            cartItem.totalPrice = effectivePrice * cartItem.quantity;
+            await cartItem.save();
+
         } else {
-            cartItem.quantity -= 1
-            cartItem.totalPrice -= product.price
-            await cartItem.save()
-        }
+            return res.status(400).json({
+                success: false,
+                message: "Invalid type — must be 'plus' or 'minus'...",
+            });
+        };
 
         return res.status(200).json({
             success: true,
