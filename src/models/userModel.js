@@ -2,10 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const userSchema = new Schema({
-    firstname: {
-        type: String,
-    },
-    lastname: {
+    name: {
         type: String,
     },
     email: {
@@ -17,12 +14,10 @@ const userSchema = new Schema({
     phoneNumber: {
         type: String,
     },
-    terms: {
-        type: Boolean,
-    },
-    profile: {
-        type: String,
-    },
+    
+    // profile: {
+    //     type: String,
+    // },
     role: {
         type: String,
         enum: ['admin', 'user', 'editor', 'vendor'],
@@ -42,27 +37,19 @@ const userSchema = new Schema({
 
     // alada paramitre...
     billingAddress: {
-        firstname: {
+        fullName: {
             type: String,
         },
-        lastname: {
-            type: String,
-        },
+        
         email: {
             type: String,
         },
-        companyName: {
-            type: String,
-        },
-        state: {
-            type: String,
-        },
+        
+        
         zipCode: {
             type: String,
         },
-        country: {
-            type: String,
-        },
+        
         phoneNumber: {
             type: String,
         },

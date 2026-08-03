@@ -6,22 +6,23 @@ const generateToken = require('../utils/generateToken');
 const jwt = require('jsonwebtoken')
 
 const registrationController = async (req, res) => {
-    const { email, password, confirmPassword, terms } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
 
     try {
         //mailer email pai na tai dese...
         const email = req.body.email;
-
-        emptyFieldValidation(res, email, password, confirmPassword, terms);
+        
+        // emptyFieldValidation(res, email, password, confirmPassword, terms);
+        emptyFieldValidation(res, name, email, password, confirmPassword);
 
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             return res.status(409).json({ success: false, message: 'Already registerred...' })
         };
 
-        if (!terms) {
-            return res.status(400).json({ success: false, message: 'Please accept our Terms and Conditions...' })
-        };
+        // if (!terms) {
+        //     return res.status(400).json({ success: false, message: 'Please accept our Terms and Conditions...' })
+        // };
 
         if (password !== confirmPassword) {
             return res.status(400).json({ success: false, message: 'password not matched...' })
@@ -33,7 +34,8 @@ const registrationController = async (req, res) => {
         const createProfile = await new User({
             email: email,
             password: hashPassword,
-            terms: terms,
+            // terms: terms,
+            name: name,
         }).save()
 
         // Email varification ...//
@@ -53,7 +55,7 @@ const registrationController = async (req, res) => {
     } catch (error) {
         console.log(error);
 
-        return res.status(500).json({ success: false, message: 'Server error...' })
+        return res.status(500).json({ success: false, message: 'Server error on register...' })
     }
 };
 
