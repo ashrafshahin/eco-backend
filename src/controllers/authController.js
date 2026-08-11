@@ -79,9 +79,26 @@ const loginController = async (req, res) => {
         );
         // Credential thik thakle login hobe...
         if (!passMatch) {
-            return res.status(400).json({ success: false, message: 'Invalid Credential...' });
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid Credential...'
+            });
+            // delete existingUser[password]
         } else {
-            return res.status(200).json({ token, success: true, message: 'Login Successfully done...' });
+            return res.status(200).json({
+                token,
+                success: true,
+                message: 'Login Successfully done...',
+                data: {
+                    userId: existingUser._id,
+                    name: existingUser.name,
+                    email: existingUser.email,
+                    role: existingUser.role,
+                    isVarified: existingUser.isVarified,
+                    ishold: existingUser.isHold,
+
+                },
+            });
         }
 
 
@@ -90,7 +107,7 @@ const loginController = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
 
-}
+};
 
 const forgotPasswordController = async (req, res) => {
     const { email } = req.body;
@@ -182,6 +199,6 @@ const verifyEmailController = async (req, res) => {
         console.log(error)
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
-}
+};
 
 module.exports = { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController }
