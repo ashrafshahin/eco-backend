@@ -90,7 +90,7 @@ const loginController = async (req, res) => {
                 success: true,
                 message: 'Login Successfully done...',
                 data: {
-                    userId: existingUser._id,
+                    _id: existingUser._id,
                     name: existingUser.name,
                     email: existingUser.email,
                     role: existingUser.role,

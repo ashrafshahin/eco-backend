@@ -11,7 +11,7 @@ const userSchema = new Schema({
     password: {
         type: String,
     },
-    phoneNumber: {
+    phone: {
         type: String,
     },
     
@@ -24,6 +24,17 @@ const userSchema = new Schema({
         default: 'user',
 
     },
+    postalCode: {
+        type: String,
+    },
+
+    address:{
+        type: String,
+    },
+    city:{
+         type: String,
+    },
+
     // user varified check korar jonno...//
     isVarified: {
         type: Boolean,
@@ -34,7 +45,7 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
-
+    
     // alada paramitre...
     billingAddress: {
         fullName: {
@@ -55,7 +66,7 @@ const userSchema = new Schema({
         },
 
     },
-
+    
 });
 
 module.exports = mongoose.model('User', userSchema);

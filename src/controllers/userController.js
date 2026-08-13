@@ -21,25 +21,34 @@ const singleUserDataController = async (req, res) => {
     try {
         const { id } = req.params;
 
+        // id valid kina check korse...
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid ID"
+                message: "Invalid user ID..."
             })
         };
-        const userData = await User.findById(id).select("-password")
 
+        // no need to send password  to FRONEND with user data... tai SELECT
+        const userData = await User.findById(id).select("-password")
         if (!userData) {
-            return res.status(404).json({ success: false, message: "User not found..." })
+            return res.status(404).json({
+                success: false,
+                message: "User not found..."
+            })
         } else {
-            return res.status(200).json({ success: true, message: `user: ${userData.email}`, user: userData })
+            return res.status(200).json({
+                success: true,
+                message: `user: ${userData.email} - Information below...`,
+                userData: userData
+            })
         }
 
     } catch (error) {
         console.log('get Single User data error:...', error)
-        return res.status(500).json({ success: false, message: 'Server error...' });
+        return res.status(500).json({ success: false, message: 'Server error in get single data...' });
     }
-}
+};
 
 const deleteDataController = async (req, res) => {
     try {
