@@ -18,7 +18,7 @@ const loginLimiter = rateLimit({
 
 const forgotPasswordLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 5,
+    limit: 15,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
     ipv6Subnet: 56
@@ -26,7 +26,7 @@ const forgotPasswordLimiter = rateLimit({
 
 const resetPasswordLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 5,
+    limit: 15,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
     ipv6Subnet: 56
@@ -34,7 +34,7 @@ const resetPasswordLimiter = rateLimit({
 
 const resendVerificationEmailLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 5,
+    limit: 15,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
     ipv6Subnet: 56
@@ -42,7 +42,7 @@ const resendVerificationEmailLimiter = rateLimit({
 
 const varificationEmailLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 5,
+    limit: 15,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
     ipv6Subnet: 56

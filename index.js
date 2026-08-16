@@ -34,7 +34,7 @@ app.post('/login', loginLimiter, loginController);
 app.post('/forgotpassword', forgotPasswordLimiter, forgotPasswordController);
 app.post('/resetpassword/:token', resetPasswordLimiter, resetPasswordController);
 app.post('/resendverificationemail', resendVerificationEmailLimiter, resendVerificationEmailController);
-app.post('/verifyemail/:token', varificationEmailLimiter, verifyEmailController)
+app.post('/verify-email/:token', varificationEmailLimiter, verifyEmailController)
 
 // Standard RESTful API Design... Product create...
 app.post('/create-product', upload.array('images', 5), createProductController);

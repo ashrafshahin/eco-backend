@@ -65,7 +65,11 @@ const deleteDataController = async (req, res) => {
         if (!userData) {
             return res.status(404).json({ success: false, message: 'User not found...' })
         } else {
-            return res.status(200).json({ success: true, message: 'User deleted...' })
+            return res.status(200).json({
+                success: true,
+                message: `${userData.name} , has been deleted...`,
+
+            })
         }
 
     } catch (error) {

@@ -3,22 +3,22 @@ const { sendVerificationEmail, resetPasswordEmail } = require('../utils/mailer')
 const bcrypt = require('bcrypt')
 const { emptyFieldValidation } = require('../utils/validation');
 const generateToken = require('../utils/generateToken');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+
 
 const registrationController = async (req, res) => {
     const { name, email, password, confirmPassword } = req.body;
 
     try {
-        //mailer email pai na tai dese...
-        const email = req.body.email;
-        
-        // emptyFieldValidation(res, email, password, confirmPassword, terms);
-        emptyFieldValidation(res, name, email, password, confirmPassword);
-
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
-            return res.status(409).json({ success: false, message: 'Already registerred...' })
+            return res.status(409).json({
+                success: false,
+                message: 'User already registerred...'
+            })
         };
+
+        emptyFieldValidation(res, name, email, password, confirmPassword);
 
         // if (!terms) {
         //     return res.status(400).json({ success: false, message: 'Please accept our Terms and Conditions...' })
@@ -37,11 +37,14 @@ const registrationController = async (req, res) => {
             // terms: terms,
             name: name,
         }).save()
+        
+        const token = generateToken(
+            { id: createProfile._id, email: createProfile.email },
+            process.env.ACCESS_TOKEN_SECRET,
+            "1d",
+        );
 
-        // Email varification ...//
-        await sendVerificationEmail(email);
-
-        const token = generateToken(createProfile);
+        sendVerificationEmail(token, email);
 
         return res.status(201).json({
             token,
@@ -62,15 +65,14 @@ const registrationController = async (req, res) => {
 const loginController = async (req, res) => {
     const { email, password } = req.body;
     try {
-
-        emptyFieldValidation(res, email, password);
-
         const existingUser = await User.findOne({ email: email });
         if (!existingUser) {
             return res.status(404).json({ success: false, message: 'please register...' })
         };
 
-        const token = generateToken(existingUser);
+        emptyFieldValidation(res, email, password);
+
+        // const token = generateToken(existingUser);
 
         // compare hash vs plain password...
         const passMatch = bcrypt.compareSync(
@@ -86,7 +88,7 @@ const loginController = async (req, res) => {
             // delete existingUser[password]
         } else {
             return res.status(200).json({
-                token,
+                // token,
                 success: true,
                 message: 'Login Successfully done...',
                 data: {
@@ -94,7 +96,7 @@ const loginController = async (req, res) => {
                     name: existingUser.name,
                     email: existingUser.email,
                     role: existingUser.role,
-                    isVarified: existingUser.isVarified,
+                    isVerified: existingUser.isVerified,
                     ishold: existingUser.isHold,
 
                 },
@@ -176,29 +178,56 @@ const resendVerificationEmailController = async (req, res) => {
 }
 
 const verifyEmailController = async (req, res) => {
-    const { token } = req.params;
-    try {
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-            if (err) {
-                res.send({ message: 'Unauthorised token...' })
-            } else {
-                const userId = decoded.id
-                const findUser = await User.findOne({ userId });
-                if (findUser.isVarified) {
-                    return res.send({ message: 'User already verified...' })
-                } else {
-                    findUser.isVarified = true;
-                    findUser.save()
-                    return res.status(200).json({ success: true, message: "Email varification successful..." });
+  const { token } = req.params;
 
-                }
-            }
-        })
+  jwt.verify(
+    token,
+    process.env.ACCESS_TOKEN_SECRET,
+    async function (err, decoded) {
+      if (err) {
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized...",
+        });
+      }
+        try {
+            const userId = decoded.id;
+            const findUser = await User.findOne({_id: userId})
+            
+            if (!findUser) {
+                return res.status(404).json({success: false, message: "User not found..."});
+            };
 
+            if (findUser.isVerified) {
+                return res.status(200).json({
+                success: true,
+                message: "User already verified...",
+          });
+        }
+
+            findUser.isVerified = true;
+
+            await findUser.save();
+
+            return res.status(200).json({
+                success: true,
+                message: "Email verified successfully...",
+        });
+            
+
+        
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, message: 'Server error...' })
+        console.error("Email verification error:", error);
+
+            return res.status(500).json({
+                success: false,
+                message: "Email verification server error...",
+            });
+
+        }
     }
+  );
 };
+
 
 module.exports = { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController }

@@ -36,7 +36,7 @@ const userSchema = new Schema({
     },
 
     // user varified check korar jonno...//
-    isVarified: {
+    isVerified: {
         type: Boolean,
         default: false,
     },

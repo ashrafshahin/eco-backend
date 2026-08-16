@@ -1,14 +1,17 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 
-const secureMiddleware = (req, res, next) => {
-    const token = req.headers.authorization
-    
-    const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if (err) {
-            res.send({ message: 'Unauthorised..' })
-        } else {
+let secureMiddleWare = (req,res,next)=>{
+    let token = req.headers.authorization
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function(err, decoded) {
+        if(err){
+            res.send({message: "Unauthorized"})
+        }else{
             next()
         }
-    })
+    });
 
-};
+
+}
+
+module.exports = secureMiddleWare
