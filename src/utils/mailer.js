@@ -64,4 +64,32 @@ const resetPasswordEmail = async (token,email) => {
     }
 };
 
-module.exports = {sendVerificationEmail, resetPasswordEmail,}
+const resendVerificationEmail = async (token, email) => {
+    
+    if (!email) {
+        throw new Error("No email provided...");
+    };
+    if (!token) {
+        throw new Error("No token provided...");
+    };
+
+    try {
+        const info = await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: email,
+            subject: "Please reset your password...",
+
+            html:`<body style="margin:0;padding:0;background:#f4f7f6;font-family:Arial,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 15px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.08)"><tr><td align="center" style="background:linear-gradient(135deg,#2e7d32,#43a047);padding:35px 20px"><h1 style="margin:0;color:#fff;font-size:32px">Eco Bazaar</h1><p style="margin:8px 0 0;color:#e8f5e9">Sustainable Shopping Made Easy</p></td></tr><tr><td style="padding:40px"><h2 style="margin:0 0 20px;color:#222">Verify Your Email</h2><p style="font-size:16px;line-height:1.7;color:#555">Hi <strong>Dear User</strong>,</p><p style="font-size:16px;line-height:1.7;color:#555">As requested, we’ve sent you a new verification link for your Eco Bazaar account. Click the button below to verify your email address.</p><p align="center" style="margin:30px 0"><a href="http://localhost:5173/verify-email/${token}" target="_blank" style="background:#2e7d32;color:#fff;text-decoration:none;padding:15px 35px;border-radius:50px;font-weight:bold">Verify Email</a></p><p style="background:#f1f8f4;border-left:4px solid #43a047;padding:15px;color:#555;font-size:14px">This verification link will expire in <strong>24 hours</strong>.</p><p style="font-size:14px;line-height:1.7;color:#666">If you did not request a new verification email, you can safely ignore this message.</p><p style="margin-top:30px;color:#333">Cheers,<br><strong>Eco Bazaar Team</strong></p></td></tr><tr><td align="center" style="background:#f8f8f8;padding:20px;border-top:1px solid #eee"><p style="margin:0;font-size:12px;color:#888">© 2026 Eco Bazaar. All rights reserved. Powered by Ashraf Shahin</p></td></tr></table></td></tr></table></body>`
+                        
+        });
+        
+        
+    console.log("Message sent: %s", info.messageId);
+        // Preview URL is only available when using an Ethereal test account
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    } catch (err) {
+        console.error("Error while sending resend mail:", err);
+    }
+};
+
+module.exports = {sendVerificationEmail, resetPasswordEmail, resendVerificationEmail}

@@ -1,5 +1,5 @@
 const User = require('../models/userModel');
-const { sendVerificationEmail, resetPasswordEmail } = require('../utils/mailer');
+const { sendVerificationEmail, resetPasswordEmail, resendVerificationEmail } = require('../utils/mailer');
 const bcrypt = require('bcrypt')
 const { emptyFieldValidation } = require('../utils/validation');
 const generateToken = require('../utils/generateToken');
@@ -186,11 +186,21 @@ const resendVerificationEmailController = async (req, res) => {
         if (!existingUser) {
             return res.status(404).json({ success: false, message: 'User not found...' })
         };
-        const token = generateToken(existingUser);
-        await resetPasswordEmail(email);
-        res.status(200).json({ token, success: true, message: "Check your email to reset password..." })
+        const token = generateToken(
+            { id: existingUser._id, email: existingUser.email },
+            process.env.ACCESS_TOKEN_SECRET,
+            "1d"
+        );
+        
+        await resendVerificationEmail(token, email);
+
+        res.status(200).json({
+            // token,
+            success: true,
+            message: "Check your email to reset password..."
+        })
     } catch (error) {
-        console.log(error)
+        console.log("Resend verification error:", error);
         return res.status(500).json({ success: false, message: 'Server error...' })
     }
 }
