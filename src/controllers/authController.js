@@ -121,12 +121,20 @@ const forgotPasswordController = async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found...' })
         };
 
-        // aber forgot email jabe...//
-        await resetPasswordEmail(email);
+        const token = generateToken(
+            { id: existingUser._id, email: existingUser.email },
+            process.env.ACCESS_TOKEN_SECRET,
+            "1d"
+        );
 
-        const token = generateToken(existingUser);
+        resetPasswordEmail(token, email);
 
-        res.status(200).json({ token, success: true, message: "Please check your email..." })
+
+        res.status(200).json({
+            // token,
+            success: true,
+            message: "Forgot password Email sent, Please check your email..."
+        })
 
     } catch (error) {
         console.log(error)
@@ -135,23 +143,33 @@ const forgotPasswordController = async (req, res) => {
 };
 
 const resetPasswordController = (req, res) => {
-    const { newPassword, confirmPassword } = req.body
+    const { password, confirmPassword } = req.body
     const { token } = req.params;
 
     try {
-        if (newPassword !== confirmPassword) {
+        if (password !== confirmPassword) {
             res.send({ message: "Confirm password not matched..." })
         }
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
+        jwt.verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET,
+            async (err, decoded) => {
             if (err) {
                 res.send({ message: 'Unauthorised token...' })
             } else {
-                const hashPassword = bcrypt.hashSync(newPassword, 10);
+                const hashPassword = bcrypt.hashSync(password, 10);
+                console.log(decoded);
+                
                 const updatePassword = await User.findByIdAndUpdate(
                     { _id: decoded.id },
                     { password: hashPassword },
-                    { returnDocument: 'after' })
-                res.send({ message: "Password updated..." })
+                    { new: true },
+                )
+                res.status(200).json({
+                    success: true,
+                    message: "Password updated...",
+                    newPassword: updatePassword,
+                })
             }
         })
 

@@ -31,8 +31,8 @@ dbConfig()
 // Auth management...
 app.post('/registration', registrationLimiter, registrationController);
 app.post('/login', loginLimiter, loginController);
-app.post('/forgotpassword', forgotPasswordLimiter, forgotPasswordController);
-app.post('/resetpassword/:token', resetPasswordLimiter, resetPasswordController);
+app.post('/forgot-password', forgotPasswordLimiter, forgotPasswordController);
+app.post('/reset-password/:token', resetPasswordLimiter, resetPasswordController);
 app.post('/resendverificationemail', resendVerificationEmailLimiter, resendVerificationEmailController);
 app.post('/verify-email/:token', varificationEmailLimiter, verifyEmailController)
 
