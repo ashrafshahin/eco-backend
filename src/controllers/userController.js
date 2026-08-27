@@ -1,9 +1,9 @@
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 const User = require('../models/userModel')
 
 const getAllUsersController = async (req, res) => {
     try {
-        const userData = await User.find({isDelete: false,isActive: true}).select("-password");
+        const userData = await User.find({}).select("-password");
         
         return res.status(200).json({
             success: true,
@@ -98,7 +98,7 @@ const getAllDeleteUsersController = async (req, res) => {
 
 const getAllActiveUsersController = async (req, res) => {
     try {
-        const userData = await User.find({isDelete:false,isActive:true}).select("-password")
+        const userData = await User.find({isDelete:false}).select("-password")
         
         return res.status(200).json({
             success: true,
