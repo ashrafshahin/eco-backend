@@ -14,6 +14,15 @@ const userSchema = new Schema({
     phone: {
         type: String,
     },
+    isDelete: {
+        type: Boolean,
+        default: false,
+    },
+    isActive: {
+    type: Boolean,
+        default: true,
+    
+    },
     
     // profile: {
     //     type: String,

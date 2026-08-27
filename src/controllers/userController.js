@@ -3,7 +3,7 @@ const User = require('../models/userModel')
 
 const getAllUsersController = async (req, res) => {
     try {
-        const userData = await User.find({}).select("-password")
+        const userData = await User.find({isDelete: false,isActive: true}).select("-password");
         
         return res.status(200).json({
             success: true,
@@ -61,7 +61,8 @@ const deleteDataController = async (req, res) => {
             })
         };
 
-        const userData = await User.findByIdAndDelete(id)
+        // const userData = await User.findByIdAndDelete(id)
+        const userData = await User.findByIdAndUpdate({ _id: id }, { isDelete: true });
         if (!userData) {
             return res.status(404).json({ success: false, message: 'User not found...' })
         } else {
@@ -77,6 +78,38 @@ const deleteDataController = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error...' });
     }
 
+};
+
+const getAllDeleteUsersController = async (req, res) => {
+    try {
+        const userData = await User.find({isDelete:true}).select("-password")
+        
+        return res.status(200).json({
+            success: true,
+            message: "All Deleted User data displayed...",
+            users: userData
+        })
+        
+    } catch (error) {
+        console.log('Get all Deleted users error:...', error)
+        return res.status(500).json({ success: false, message: 'Server error...' });
+    }
+};
+
+const getAllActiveUsersController = async (req, res) => {
+    try {
+        const userData = await User.find({isDelete:false,isActive:true}).select("-password")
+        
+        return res.status(200).json({
+            success: true,
+            message: "All Active User data displayed...",
+            users: userData
+        })
+        
+    } catch (error) {
+        console.log('Get all Active users error:...', error)
+        return res.status(500).json({ success: false, message: 'Server error...' });
+    }
 };
 
 const updateUserDataController = async (req, res) => {
@@ -102,4 +135,4 @@ const updateUserDataController = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsersController, singleUserDataController, deleteDataController, updateUserDataController }
+module.exports = { getAllUsersController, singleUserDataController, deleteDataController, getAllDeleteUsersController, updateUserDataController, getAllActiveUsersController }

@@ -16,7 +16,7 @@ app.use('/upload/products', express.static(path.join(__dirname, 'upload/products
 
 const { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController } = require('./src/controllers/authController');
 const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
-const { deleteDataController, updateUserDataController, getAllUsersController, singleUserDataController } = require('./src/controllers/userController');
+const { deleteDataController, updateUserDataController, getAllUsersController, singleUserDataController, getAllDeleteUsersController, getAllActiveUsersController } = require('./src/controllers/userController');
 const { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController } = require('./src/controllers/productController');
 const { createCartController, cartProductIncreDecreController, cartProductDeleteController, getCartProductController } = require('./src/controllers/cartController');
 const { paymentController } = require('./src/controllers/paymentController');
@@ -63,6 +63,8 @@ app.get('/getsingleuser/:id', singleUserDataController)
 
 // get data
 app.delete('/deleteuser/:id', deleteDataController)
+app.get('/alldeletedusers', getAllDeleteUsersController)
+app.get('/allactiveusers', getAllActiveUsersController)
 
 // update 
 app.post('/updateuser/:id', updateUserDataController)

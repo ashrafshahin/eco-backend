@@ -1,0 +1,289 @@
+Get all Deleted users error:... MongoServerSelectionError: connection <monitor> to 159.41.168.67:27017 timed out
+    at Topology.selectServer (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/sdam/topology.js:348:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:567:9)
+    at process.processTimers (node:internal/timers:541:7)
+    at async executeOperationWithRetries (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:260:22)
+    at async executeOperation (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:83:16)
+    at async FindCursor._initialize (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/find_cursor.js:62:26)
+    at async FindCursor.cursorInit (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:653:13)
+    at async FindCursor.next (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:325:17) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-cmrjayf-shard-00-00.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-01.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-02.nicn5ni.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-jwpovw-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000011a'),
+    maxSetVersion: 299,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkTimeoutError: connection <monitor> to 159.41.168.67:27017 timed out
+      at Timeout._onTimeout (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cmap/connection.js:140:26)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+    beforeHandshake: false,
+    [cause]: undefined
+  }
+}
+Get all Active users error:... MongoServerSelectionError: connection <monitor> to 159.41.168.67:27017 timed out
+    at Topology.selectServer (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/sdam/topology.js:348:38)
+    at async executeOperationWithRetries (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:260:22)
+    at async executeOperation (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:83:16)
+    at async FindCursor._initialize (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/find_cursor.js:62:26)
+    at async FindCursor.cursorInit (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:653:13)
+    at async FindCursor.next (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:325:17)
+    at async [Symbol.asyncIterator] (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:253:34)
+    at async FindCursor.toArray (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:405:26)
+    at async model.Query._find (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:2475:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-cmrjayf-shard-00-00.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-01.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-02.nicn5ni.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-jwpovw-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000011a'),
+    maxSetVersion: 299,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkTimeoutError: connection <monitor> to 159.41.168.67:27017 timed out
+      at Timeout._onTimeout (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cmap/connection.js:140:26)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+    beforeHandshake: false,
+    [cause]: undefined
+  }
+}
+Get all users error:... MongoServerSelectionError: connection <monitor> to 159.41.168.67:27017 timed out
+    at Topology.selectServer (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/sdam/topology.js:348:38)
+    at async executeOperationWithRetries (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:157:18)
+    at async executeOperation (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:83:16)
+    at async FindCursor._initialize (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/find_cursor.js:62:26)
+    at async FindCursor.cursorInit (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:653:13)
+    at async FindCursor.next (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:325:17)
+    at async [Symbol.asyncIterator] (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:253:34)
+    at async FindCursor.toArray (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:405:26)
+    at async model.Query._find (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:2475:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-cmrjayf-shard-00-00.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-01.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-02.nicn5ni.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-jwpovw-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000011a'),
+    maxSetVersion: 299,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkTimeoutError: connection <monitor> to 159.41.168.67:27017 timed out
+      at Timeout._onTimeout (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cmap/connection.js:140:26)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+    beforeHandshake: false,
+    [cause]: undefined
+  }
+}
+Get all Active users error:... MongoServerSelectionError: connection <monitor> to 159.41.168.67:27017 timed out
+    at Topology.selectServer (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/sdam/topology.js:348:38)
+    at async executeOperationWithRetries (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:260:22)
+    at async executeOperation (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:83:16)
+    at async FindCursor._initialize (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/find_cursor.js:62:26)
+    at async FindCursor.cursorInit (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:653:13)
+    at async FindCursor.next (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:325:17)
+    at async [Symbol.asyncIterator] (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:253:34)
+    at async FindCursor.toArray (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:405:26)
+    at async model.Query._find (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:2475:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-cmrjayf-shard-00-00.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-01.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-02.nicn5ni.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-jwpovw-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000011a'),
+    maxSetVersion: 299,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkTimeoutError: connection <monitor> to 159.41.168.67:27017 timed out
+      at Timeout._onTimeout (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cmap/connection.js:140:26)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+    beforeHandshake: false,
+    [cause]: undefined
+  }
+}
+Get all Active users error:... MongoServerSelectionError: connection <monitor> to 159.41.168.67:27017 timed out
+    at Topology.selectServer (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/sdam/topology.js:348:38)
+    at async executeOperationWithRetries (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:157:18)
+    at async executeOperation (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:83:16)
+    at async FindCursor._initialize (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/find_cursor.js:62:26)
+    at async FindCursor.cursorInit (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:653:13)
+    at async FindCursor.next (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:325:17)
+    at async [Symbol.asyncIterator] (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:253:34)
+    at async FindCursor.toArray (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:405:26)
+    at async model.Query._find (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:2475:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-cmrjayf-shard-00-00.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-01.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-02.nicn5ni.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-jwpovw-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000011a'),
+    maxSetVersion: 299,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkTimeoutError: connection <monitor> to 159.41.168.67:27017 timed out
+      at Timeout._onTimeout (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cmap/connection.js:140:26)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    errorLabelSet: Set(2) { 'ResetPool', 'InterruptInUseConnections' },
+    beforeHandshake: false,
+    [cause]: undefined
+  }
+}
+Get all Active users error:... MongoServerSelectionError: Socket 'secureConnect' timed out after 30001ms (connectTimeoutMS: 30000)
+    at Topology.selectServer (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/sdam/topology.js:348:38)
+    at async executeOperationWithRetries (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:260:22)
+    at async executeOperation (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:83:16)
+    at async FindCursor._initialize (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/find_cursor.js:62:26)
+    at async FindCursor.cursorInit (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:653:13)
+    at async FindCursor.next (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:325:17)
+    at async [Symbol.asyncIterator] (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:253:34)
+    at async FindCursor.toArray (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:405:26)
+    at async model.Query._find (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:2475:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-cmrjayf-shard-00-00.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-01.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-02.nicn5ni.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-jwpovw-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000011a'),
+    maxSetVersion: 299,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkTimeoutError: Socket 'secureConnect' timed out after 30001ms (connectTimeoutMS: 30000)
+      at TLSSocket.<anonymous> (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cmap/connect.js:316:20)
+      at Object.onceWrapper (node:events:622:28)
+      at TLSSocket.emit (node:events:508:28)
+      at Socket._onTimeout (node:net:604:8)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    errorLabelSet: Set(4) {
+      'SystemOverloadedError',
+      'RetryableError',
+      'ResetPool',
+      'InterruptInUseConnections'
+    },
+    beforeHandshake: false,
+    [cause]: undefined
+  }
+}
+Get all Deleted users error:... MongoServerSelectionError: Socket 'secureConnect' timed out after 30001ms (connectTimeoutMS: 30000)
+    at Topology.selectServer (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/sdam/topology.js:348:38)
+    at async executeOperationWithRetries (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:157:18)
+    at async executeOperation (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/operations/execute_operation.js:83:16)
+    at async FindCursor._initialize (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/find_cursor.js:62:26)
+    at async FindCursor.cursorInit (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:653:13)
+    at async FindCursor.next (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:325:17)
+    at async [Symbol.asyncIterator] (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:253:34)
+    at async FindCursor.toArray (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cursor/abstract_cursor.js:405:26)
+    at async model.Query._find (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:2475:14) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-cmrjayf-shard-00-00.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-01.nicn5ni.mongodb.net:27017' => [ServerDescription],
+      'ac-cmrjayf-shard-00-02.nicn5ni.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-jwpovw-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000011a'),
+    maxSetVersion: 299,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkTimeoutError: Socket 'secureConnect' timed out after 30001ms (connectTimeoutMS: 30000)
+      at TLSSocket.<anonymous> (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongodb/lib/cmap/connect.js:316:20)
+      at Object.onceWrapper (node:events:622:28)
+      at TLSSocket.emit (node:events:508:28)
+      at Socket._onTimeout (node:net:604:8)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    errorLabelSet: Set(4) {
+      'SystemOverloadedError',
+      'RetryableError',
+      'ResetPool',
+      'InterruptInUseConnections'
+    },
+    beforeHandshake: false,
+    [cause]: undefined
+  }
+}
