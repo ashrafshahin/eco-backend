@@ -133,6 +133,28 @@ const updateUserDataController = async (req, res) => {
         console.log('Update error:...', error)
         return res.status(500).json({ success: false, message: 'Server error...' });
     }
-}
+};
 
-module.exports = { getAllUsersController, singleUserDataController, deleteDataController, getAllDeleteUsersController, updateUserDataController, getAllActiveUsersController }
+const getSearchDataController = async (req, res) => {
+    try {
+        console.log('req.body:...', req.body);
+
+        const userData = await User.find({ $or: [
+                { name: { $regex: req.body.name, $options: 'i' } },
+                { email: { $regex: req.body.email, $options: 'i' } },
+                
+            ]}).select("-password");
+        
+        return res.status(200).json({
+            success: true,
+            message: "Search data displayed...",
+            searchResults: userData
+        })
+        
+    } catch (error) {
+        console.log('Get search data error:...', error)
+        return res.status(500).json({ success: false, message: 'Search filter Server error...' });
+    }
+};
+
+module.exports = { getAllUsersController, singleUserDataController, deleteDataController, getAllDeleteUsersController, updateUserDataController, getAllActiveUsersController, getSearchDataController, }
