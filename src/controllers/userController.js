@@ -142,9 +142,12 @@ const getSearchDataController = async (req, res) => {
         const userData = await User.find({ $or: [
                 { name: { $regex: req.body.name, $options: 'i' } },
                 { email: { $regex: req.body.email, $options: 'i' } },
-                
-            ]}).select("-password");
-        
+            { role: { $regex: req.body.role, $options: 'i' } },
+            
+             
+        ],
+        }).select("-password");
+
         return res.status(200).json({
             success: true,
             message: "Search data displayed...",
