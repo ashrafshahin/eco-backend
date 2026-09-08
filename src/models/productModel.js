@@ -5,13 +5,13 @@ const productSchema = new Schema({
     title: {
         type: String,
         unique: true,
-        required: true,
+        // required: true,
         trim: true,
     },
     sku: {
         type: String,
         unique: true,
-        required: true,
+        // required: true,
         trim: true,
     },
     description: {
@@ -22,68 +22,39 @@ const productSchema = new Schema({
     },
     price: {
         type: Number,
-        required: true,
+        // required: true,
     },
 
-// ----- discount er kaj ---- ...//
-    discountPrice: {
-        type: {
+    discount: {
+        type: Number,
+        default: 0,
+        min:0,
+    },
+    discountType: {
+        
             type: String,
             enum: ['none', 'percentage', 'flat'],
             default: 'none',
-        },
-        value: {
-            type: Number,
-            default: 0,
-            min: 0,
-            validate: {
-                validator: function(discountValue) {
-                    if (this.type === 'percentage') return discountValue <= 100;
-                    return true;
-                },
-                message: 'percentage discount cannot exceed 100...',
-
-            },
-        },
-        startDate: Date,
-        endDate: Date,
     },
-
-    salePrice: {
-        type: Number,
-        required: true,
+    discountStartDate: {
+        type: Date,
     },
-    // ----- discount er kaj ends... ----- //
-
+    discountEndDate: {
+        type: Date,
+    },
     stock: {
         type: Number,
         min: 0,
         default: 0,
     },
-
     category: {
         type: String,
-        required: true,
+        // required: true,
     },
     brand: {
         type: String,
 
     },
-    // brand: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Brand',
-    //     required: true,
-    // },
-    // category: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Category',
-    //     required: true,
-    // },
-    // subCategory: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'SubCategory',
-    //     required: true,
-    // },
 
     tags: [{
         type: String,

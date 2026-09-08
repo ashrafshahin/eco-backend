@@ -5,10 +5,10 @@ const mongoose = require('mongoose');
 
 const createProductController = async (req, res) => {
     try {
-        const { title, price, category, discount } = req.body;
+        const { title, price, category, discount, tags, stock, discountType, discountStartDate, discountEndDate, isMain } = req.body;
 
         // empty field check kora
-        emptyFieldValidation(res, title, price, category);
+        emptyFieldValidation(res, title, price, category, discount, tags, stock, discountType, discountStartDate, discountEndDate, isMain);
 
         // multer deys kono image upload hoise kina ... 
         if (!req.files || req.files.length === 0) {
@@ -16,7 +16,16 @@ const createProductController = async (req, res) => {
                 success: false,
                 message: "Please upload at least one image..."
             });
-        }
+        };
+
+        // isMain image select korar jonno...
+        let images = [];
+        req.files.map((item, index) => {
+            images.push({
+                url: item.path,
+                isMain: isMain == index,
+            });
+        });
 
         const existingTitle = await Product.findOne({ title });
         if (existingTitle) {
@@ -32,39 +41,85 @@ const createProductController = async (req, res) => {
             return res.status(409).json({ success: false, message: 'Product SKU can not be duplicated...' })
         };
 
-        // images upload korar jonno...
-        const formattedImages = req.files.map((file, index) => {
-            return {
-                url: `/uploads/products/${file.filename}`,
-                isMain: index === 0 // default first image isMain...
-            }
-        })
+        // stock check kora..Stock 1 er kom hole error message delam...
 
-        // Discount Price work... did this for form data format...
+        if (!stock || stock < 1) {
+            return res.status(400).json({
+                success: false,
+                message: 'Stock must be greater than 0...',
+            });
+        };
 
-        let parsedDiscount = discount;
-
-        if (typeof discount === "string") {
-            try {
-                parsedDiscount = JSON.parse(discount);
-            } catch (error) {
+        // Flat Discount, price er boro / minus figure hoye gele check korbe...
+        if (discountType === 'flat') {
+            if (price <= discount || discount < 0) {
                 return res.status(400).json({
-                    success: false,
-                    message: "Invalid discount format..."
-                });
+                success: false,
+                message: 'Flat Discount must not be greater than the product price...',
+            });
+            }
+        };
+
+        // Percentage Discount, price er boro / minus figure hoye gele check korbe...
+        if (discountType === 'percentage') {
+            if (discount >= 100 || discount < 0 ) {
+                return res.status(400).json({
+                success: false,
+                message: 'Percentage Discount must not be greater than the product price...',
+            });
             };
         };
 
-        // const salePrice = calculateSalePrice(price, discount);
-        const salePrice = calculateSalePrice(Number(price), parsedDiscount);
+        if (price <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product price must be greater than 0...',
+            });
+        };
+
+        // Discount Date related work... discountStartDate, discountEndDate check korbe...
+        
+        const startDate = new Date(discountStartDate);
+        const endDate = new Date(discountEndDate);
+
+        // const currentDate = new Date();
+        // currentDate.setHours(0, 0, 0, 0);
+
+        // const start = new Date(startDate);
+        // start.setHours(0, 0, 0, 0);
+
+        // const end = new Date(endDate);
+        // end.setHours(0, 0, 0, 0);
+        
+        if (new Date().setHours(0, 0, 0, 0) > startDate.setHours(0, 0, 0, 0)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Start date must not be in the past..., startDate currentDate er age hobe na...',
+            });
+        };
+
+        if (new Date().setHours(0, 0, 0, 0) > endDate.setHours(0, 0, 0, 0)) {
+            return res.status(400).json({
+                success: false,
+                message: 'End date must not be in the past..., endDate currentDate er age hobe na...',
+            });
+        };
+
+        // End date cannot be before start date
+        if (endDate.setHours(0, 0, 0, 0) < startDate.setHours(0, 0, 0, 0)) {
+            return res.status(400).json({
+                success: false,
+                message: 'End date must be greater than or equal to start date...',
+            });
+        }
 
         const newProduct = new Product({
             ...req.body,
-            discountPrice: parsedDiscount,
-            sku,
-            images: formattedImages,
-            salePrice,
-        })
+            tags: tags.split(','),
+            sku: sku,
+            images: images,
+            
+        });
 
         await newProduct.save()
         return res.status(201).json({
