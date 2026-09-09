@@ -12,7 +12,9 @@ const dbConfig = require('./src/config/dbConfig');
 // image er path...
 const { upload } = require('././src/middlewares/multerMiddleware')
 const path = require('path')
-app.use('/upload/products', express.static(path.join(__dirname, 'upload/products)')));
+// static image k show korano...
+app.use('/uploads/products', express.static(path.join(__dirname, 'uploads/products')));
+
 
 const { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController } = require('./src/controllers/authController');
 const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
