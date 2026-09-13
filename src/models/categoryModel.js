@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const categorySchema = new Schema({
-    title: {
+    catTitle: {
         type: String,
         unique: true,
         required: true,

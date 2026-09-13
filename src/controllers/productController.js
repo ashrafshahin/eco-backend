@@ -2,6 +2,7 @@ const Product = require('../models/productModel');
 const calculateSalePrice = require('../utils/calculateSalePrice');
 const { emptyFieldValidation } = require('../utils/validation');
 const mongoose = require('mongoose');
+const Category = require('../models/categoryModel');
 
 const createProductController = async (req, res) => {
     try {
@@ -127,12 +128,65 @@ const createProductController = async (req, res) => {
             message: 'New Product Uploaded successfully...',
             product: newProduct,
 
-        })
+        });
 
     } catch (error) {
         console.log(error, 'New Product upload related error...');
-        return res.status(500).json({ success: false, message: 'Server error...' })
+        return res.status(500).json({ success: false, message: ' New Product Create / upload Server error...' })
     }
+};
+
+const createProductCategory = async (req, res) => {
+    console.log("req.body ki ase :", req.body);
+    try {
+        const { catTitle, slug } = req.body;
+        if (!catTitle) {
+            return res.status(400).json({
+                success: false,
+                message: "Product category name is required..."
+            });
+        };
+
+        const category = new Category({
+            catTitle: catTitle,
+            slug: slug,
+        });
+
+        await category.save();
+
+        return res.status(201).json({
+            success: true,
+            message: 'Product Category cteated...',
+            category: category,
+
+        });
+        
+        
+    } catch (error) {
+        console.log(error, 'Product Category create related error...');
+        return res.status(500).json({
+            success: false,
+            message: 'Product Category create Server error...'
+        });
+    }
+};
+
+const getProductCategory = async (req, res) => {
+    try {
+        const category = await Category.find({});
+        return res.status(200).json({
+            success: true,
+            message: 'All products Categories...',
+            category: category,
+        });
+        
+    } catch (error) {
+        console.log(error, 'Get CAtegory of Products related error...');
+        return res.status(500).json({
+            success: false,
+            message: ' Get CAtegory of Products Server error...'
+        });
+    };
 };
 
 const getAllProductsController = async (req, res) => {
@@ -309,4 +363,4 @@ const updateMainImageController = async (req, res) => {
 };
 
 
-module.exports = { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController }
+module.exports = { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController, createProductCategory, getProductCategory }

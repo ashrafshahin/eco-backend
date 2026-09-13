@@ -96,15 +96,15 @@ const productSchema = new Schema({
 
 }, { timestamps: true });
 
-productSchema.pre('validate', function (discountValue) {
-    const discountDate = this.discountPrice;
-    if (
-        discountDate?.startDate &&
-        discountDate?.endDate &&
-        new Date(discountDate.startDate) >= new Date(discountDate.endDate)
-    ) {
-        throw new Error('discountPrice.endDate must be after startDate...');
-    }
-});
+// productSchema.pre('validate', function (discountValue) {
+//     const discountDate = this.discountPrice;
+//     if (
+//         discountDate?.startDate &&
+//         discountDate?.endDate &&
+//         new Date(discountDate.startDate) >= new Date(discountDate.endDate)
+//     ) {
+//         throw new Error('discountPrice.endDate must be after startDate...');
+//     }
+// });
 
 module.exports = mongoose.model('Product', productSchema)

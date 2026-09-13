@@ -19,7 +19,7 @@ app.use('/uploads/products', express.static(path.join(__dirname, 'uploads/produc
 const { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController } = require('./src/controllers/authController');
 const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
 const { deleteDataController, updateUserDataController, getAllUsersController, singleUserDataController, getAllDeleteUsersController, getAllActiveUsersController, getSearchDataController } = require('./src/controllers/userController');
-const { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController } = require('./src/controllers/productController');
+const { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController, createProductCategory, getProductCategory } = require('./src/controllers/productController');
 const { createCartController, cartProductIncreDecreController, cartProductDeleteController, getCartProductController } = require('./src/controllers/cartController');
 const { paymentController } = require('./src/controllers/paymentController');
 
@@ -38,7 +38,7 @@ app.post('/reset-password/:token', resetPasswordLimiter, resetPasswordController
 app.post('/resend-verification', resendVerificationEmailLimiter, resendVerificationEmailController);
 app.post('/verify-email/:token', varificationEmailLimiter, verifyEmailController)
 
-// Standard RESTful API Design... Product create...
+// Product create...
 app.post('/create-product', upload.array('images', 5), createProductController);
 app.put('/update-product/:id', upload.array('images', 5), updateProductController);
 app.patch('/update-main-image/:id', updateMainImageController);
@@ -46,6 +46,8 @@ app.patch('/update-main-image/:id', updateMainImageController);
 app.get('/get-all-products', getAllProductsController)
 app.get('/get-single-product/:id', getSingleProductController)
 app.delete('/delete-product/:id', deleteProductController);
+app.post('/create-category', createProductCategory);
+app.get('/get-category', getProductCategory);
 
 // Cart management
 app.post('/create-cart/:userId', createCartController);
