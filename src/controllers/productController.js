@@ -24,7 +24,9 @@ const createProductController = async (req, res) => {
         req.files.map((item, index) => {
             images.push({
                 url: item.path,
-                isMain: isMain == index,
+                isMain: isMain !== undefined
+                    ? Number(isMain) === index
+                    : index === 0,
             });
         });
 
