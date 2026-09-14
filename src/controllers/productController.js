@@ -234,46 +234,17 @@ const updateProductController = async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: 'Product not found...'
-            })
+            });
         };
-
-        // update data... Discount related work... //
-        const updateData = { ...req.body };
-
-        let parsedDiscount = updateData.discount;
-
-        if (typeof parsedDiscount === 'string') {
-            try {
-                parsedDiscount = JSON.parse(parsedDiscount);
-            } catch (error) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid discount format..."
-                });
-            };
-        };
-
-        // নতুন value থাকলে সেটা ব্যবহার করবে, না থাকলে database - এর পুরনো value ব্যবহার করবে।
-        const price = Number(updateData.price ?? existingProduct.price);
-        const discount = parsedDiscount ?? existingProduct.discountPrice;
-
-        updateData.discountPrice = discount;
-        updateData.salePrice = calculateSalePrice(price, discount);
-
         const product = await Product.findByIdAndUpdate(
-            id,
-            updateData,
-            {
-                returnDocument: "after",
-                runValidators: true,
-            },
+            id, req.body, {returnDocument: "after", runValidators: true},
         );
 
         return res.status(200).json({
             success: true,
             message: 'Product updated successfully...',
             product: product
-        })
+        });
 
     } catch (error) {
         console.log(error, 'Update Product related error...');
