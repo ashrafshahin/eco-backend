@@ -1,0 +1,46 @@
+error:
+
+REQ BODY IMAGES:
+[
+  {
+    "url": "uploads/products/1788897348843-593467613-2026.jpeg",
+    "isMain": true
+  },
+  {
+    "url": "uploads/products/1788897348869-381612923-about.png",
+    "isMain": false
+  },
+  {
+    "file": {},
+    "preview": "blob:http://localhost:5173/51b16f43-cb6a-4a9c-9da7-826d8d0ec18b",
+    "isMain": false
+  }
+]
+ValidationError: Validation failed: images.2.url: Path `url` is required.
+    at model.Query.validate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:4189:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async model.Query._findOneAndUpdate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:3616:5)
+    at async maybeTracedQueryExec (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:4801:65)
+    at async updateProductController (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/src/controllers/productController.js:242:25) {
+  errors: {
+    'images.2.url': ValidatorError: Path `url` is required.
+        at SchemaString.doValidate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/schemaType.js:1515:13)
+        at EmbeddedDocument.validate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/document.js:2858:20)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async SchemaDocumentArrayElement.doValidate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/schema/subdocument.js:293:5)
+        at async Promise.all (index 5)
+        at async updateValidators (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/helpers/updateValidators.js:184:3)
+        at async model.Query.validate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:4187:30)
+        at async model.Query._findOneAndUpdate (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:3616:5)
+        at async maybeTracedQueryExec (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/node_modules/mongoose/lib/query.js:4801:65)
+        at async updateProductController (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/src/controllers/productController.js:242:25) {
+      properties: [Object],
+      kind: 'required',
+      path: 'images.2.url',
+      value: undefined,
+      reason: undefined,
+      Symbol(mongoose#validatorError): true
+    }
+  },
+  _message: 'Validation failed'
+} Update Product related error...

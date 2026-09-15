@@ -19,7 +19,7 @@ const createProductController = async (req, res) => {
             });
         };
 
-        // isMain image select korar jonno...
+        // isMain image select korar jonno... update e jabe
         let images = [];
         req.files.map((item, index) => {
             images.push({
@@ -84,15 +84,6 @@ const createProductController = async (req, res) => {
         
         const startDate = new Date(discountStartDate);
         const endDate = new Date(discountEndDate);
-
-        // const currentDate = new Date();
-        // currentDate.setHours(0, 0, 0, 0);
-
-        // const start = new Date(startDate);
-        // start.setHours(0, 0, 0, 0);
-
-        // const end = new Date(endDate);
-        // end.setHours(0, 0, 0, 0);
         
         if (new Date().setHours(0, 0, 0, 0) > startDate.setHours(0, 0, 0, 0)) {
             return res.status(400).json({
@@ -212,12 +203,22 @@ const getSingleProductController = async (req, res) => {
         const product = await Product.findById(id)
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found...' })
-        }
+        };
+
+        // product edit/update ar akta part of work...
+        let isMain = 0;
+        product.images.map((item, index) => {
+            if (item.isMain) {
+                isMain = index;
+            }
+        });
+
         return res.status(200).json({
             success: true,
             message: `Product details: ${product.title}, ${product.sku}`,
-            product: product
-        })
+            product: product,
+            isMain: isMain,
+        });
 
 
     } catch (error) {
@@ -236,14 +237,44 @@ const updateProductController = async (req, res) => {
                 message: 'Product not found...'
             });
         };
+    
         const product = await Product.findByIdAndUpdate(
-            id, req.body, {returnDocument: "after", runValidators: true},
+            id, req.body, { returnDocument: "after", runValidators: true },
         );
 
+        // new Image upload + isMain image age ja ase false kore new isMain true korchi...
+        product.images = [...product.images];
+        req.files.map((item, index) => {
+        product.images.push({
+                url: item.path,
+                isMain: req.body.isMain == index
+                  
+            });
+        });
+        product.images.map((item, index) => {
+            if (item.isMain == true) {
+                item.isMain = false
+            };
+        });
+        product.images[req.body.isMain].isMain = true; // new isMain true hobe
+        console.log(req.body.deleteImage, "delete image ki ase ");
+
+        req.body.deleteImage.split(',').map(item => {
+            product.images.splice(item, 1);
+        });
+        
+        const productUpdated = await Product.findByIdAndUpdate(
+            id,
+            product,
+            { returnDocument: "after", runValidators: true },
+        );
+
+        console.log(product, "edit product page e gele ki ase:...");
+        
         return res.status(200).json({
             success: true,
             message: 'Product updated successfully...',
-            product: product
+            product: productUpdated
         });
 
     } catch (error) {
