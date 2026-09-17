@@ -69,6 +69,10 @@ const productSchema = new Schema({
         enum: ['pending', 'active', 'inactive'],
         default: 'pending',
     },
+    isDelete: {
+        type: Boolean,
+        default: false,
+    },
     images: [{
         url: {
             type: String,

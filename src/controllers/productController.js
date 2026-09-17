@@ -184,16 +184,27 @@ const getProductCategory = async (req, res) => {
 
 const getAllProductsController = async (req, res) => {
     try {
-        const product = await Product.find({})
+        const { status } = req.query;
+        const filter = {
+            isDelete: false,
+        };
+        if (status) {
+            filter.status = status;
+        };
+        const product = await Product.find(filter);
         return res.status(200).json({
             success: true,
-            message: 'All products...',
+            message: 'Products fetched successfully...',
             product: product
         })
 
     } catch (error) {
-        console.log(error, 'Get All Products related error...');
-        return res.status(500).json({ success: false, message: 'Server error...' })
+        console.log(error, 'Failed to fetch products  error...');
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch products Server error...',
+            error: error.message,
+        })
     }
 };
 
@@ -286,7 +297,7 @@ const updateProductController = async (req, res) => {
 const deleteProductController = async (req, res) => {
     try {
         const { id } = req.params
-        const product = await Product.findByIdAndDelete(id)
+        const product = await Product.findByIdAndUpdate(id, { isDelete: true }, { new: true });
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found...' })
         }
@@ -299,6 +310,24 @@ const deleteProductController = async (req, res) => {
     } catch (error) {
         console.log(error, 'Delete Product related error...');
         return res.status(500).json({ success: false, message: 'Server error...' })
+    }
+};
+
+const getAllDeletedProductsController = async (req, res) => {
+    try {
+        const deletedProducts = await Product.find({ isDelete: true });
+        return res.status(200).json({
+            success: true,
+            message: "Get All Deleted products...",
+            product: deletedProducts
+        });
+        
+    } catch (error) {
+        console.log(error, 'Get all Deleted Products related error...');
+        return res.status(500).json({
+            success: false,
+            message: 'Get all Deleted Products Server error...'
+        })
     }
 };
 
@@ -367,4 +396,4 @@ const updateMainImageController = async (req, res) => {
 };
 
 
-module.exports = { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController, createProductCategory, getProductCategory }
+module.exports = { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController, createProductCategory, getProductCategory, getAllDeletedProductsController }
