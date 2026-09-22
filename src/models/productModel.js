@@ -5,13 +5,20 @@ const productSchema = new Schema({
     title: {
         type: String,
         unique: true,
-        // required: true,
+        required: true,
         trim: true,
+    },
+    slug: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true,
+        lowercase: true,
     },
     sku: {
         type: String,
         unique: true,
-        // required: true,
+        required: true,
         trim: true,
     },
     description: {
@@ -22,7 +29,7 @@ const productSchema = new Schema({
     },
     price: {
         type: Number,
-        // required: true,
+        required: true,
     },
 
     discount: {
@@ -49,7 +56,7 @@ const productSchema = new Schema({
     },
     category: {
         type: String,
-        // required: true,
+        required: true,
     },
     brand: {
         type: String,
@@ -99,16 +106,5 @@ const productSchema = new Schema({
 
 
 }, { timestamps: true });
-
-// productSchema.pre('validate', function (discountValue) {
-//     const discountDate = this.discountPrice;
-//     if (
-//         discountDate?.startDate &&
-//         discountDate?.endDate &&
-//         new Date(discountDate.startDate) >= new Date(discountDate.endDate)
-//     ) {
-//         throw new Error('discountPrice.endDate must be after startDate...');
-//     }
-// });
 
 module.exports = mongoose.model('Product', productSchema)

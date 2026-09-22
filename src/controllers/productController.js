@@ -3,6 +3,160 @@ const calculateSalePrice = require('../utils/calculateSalePrice');
 const { emptyFieldValidation } = require('../utils/validation');
 const mongoose = require('mongoose');
 const Category = require('../models/categoryModel');
+// const readExcelFile = require('read-excel-file/node');
+const { readSheet } = require('read-excel-file/node');
+const productImportSchema  = require('../models/bulkImportModel');
+
+
+const bulkCreateProductController = async (req, res) => {
+  try {
+    console.log(req.file, "bulk create product check:...");
+
+    // Check Excel file
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please upload an Excel file",
+      });
+      };
+
+    // Read Excel file
+      const { objects, errors } = await readSheet(
+          `././${req.file.path}`,
+          { schema: productImportSchema, }
+      );
+      
+    console.log(errors, "product import errors ki ase:...");
+    console.log(objects, "Excel objects:...");
+
+    // No data found
+    if (!objects || objects.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No product data found in Excel file...",
+        errors,
+      });
+    }
+
+    // Convert Excel data to Product schema
+    const products = objects.filter((item) => item !== null).map((item) => ({
+        // ...item,
+        title: item.title,
+        slug: item.slug,
+        sku: `Eco${new Date().getFullYear()}-${Date.now().toString().slice(-5)}-${Math.floor(100 + Math.random() * 900)}`,
+        description: item.description,
+        shortDescription: item.shortDescription,
+        
+        price: item.price,
+        discount: item.discount || 0,
+        discountType: item.discountType || "none",
+        
+        discountStartDate: item.discountStartDate
+            ? new Date(item.discountStartDate)
+            : null,
+
+        discountEndDate: item.discountEndDate
+            ? new Date(item.discountEndDate)
+            : null,
+
+        
+        stock: item.stock || 0,
+        category: item.category,
+        brand: item.brand,
+        
+        tags: item.tags
+            ? item.tags
+                .split(",")
+                .map((tag) => tag.trim())
+            .filter(Boolean)
+            : [],
+        
+        additionalInformation: item.additionalInformation,
+        status: item.status || "pending",
+        isDelete: false,
+
+        // Excel Image URL -> Product images array
+        images: item.imageUrl
+            ? [
+                {
+                url: item.imageUrl,
+                isMain: true,
+                },
+            ]
+            : [],
+        }));
+
+        console.log(
+        products,
+        "Final products for insertMany:..."
+        );
+
+    // Insert products into MongoDB
+    const insertedProducts = await Product.insertMany(products);
+
+    return res.status(201).json({
+      success: true,
+      message: "Products imported successfully",
+      count: insertedProducts.length,
+      products: insertedProducts,
+    });
+  } catch (error) {
+    console.error(
+      "Bulk product import error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to import products",
+      error: error.message,
+    });
+  }
+};
+
+
+
+// const bulkCreateProductController = async (req, res) => {
+//     console.log(req.file, 'bulk create product check:...');
+//     // readExcelFile("../uploads/products/1789966942604-400972788-demo product spreadsheet.xlsx", { trim: false })
+//     // const data = await readSheet(`././${req.file.path}`);
+//     // console.log(data, 'full bulk e ki ase...')
+    
+   
+//     const { objects, errors } = await readSheet(
+//         `././${req.file.path}`,
+//         {schema: productImportSchema, }
+//     );
+//     // console.log(objects, 'product import objects ki ase: Array astese...');
+//     console.log(errors, 'product import errors ki ase:...');
+
+//     // Excel থেকে কোনো valid data না পেলে - AI
+//     if (!objects || objects.length === 0) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "No product data found in Excel file",
+//         errors,
+//       });
+//     }
+
+//     // Object kore data pathate use hoyrche...
+//     // objects.map((item) => {
+//     //     console.log(item.name, 'Array k object kore nilam...');
+//     // });
+
+//     // Excel objects directly MongoDB তে insert
+//     const insertedProducts = await Product.insertMany(objects);
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "Products imported successfully",
+//       count: insertedProducts.length,
+//       products: insertedProducts,
+//     });
+
+    
+// };
+
 
 const createProductController = async (req, res) => {
     try {
@@ -396,4 +550,15 @@ const updateMainImageController = async (req, res) => {
 };
 
 
-module.exports = { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController, createProductCategory, getProductCategory, getAllDeletedProductsController }
+module.exports = {
+    createProductController,
+    bulkCreateProductController,
+    getAllProductsController,
+    getSingleProductController,
+    updateProductController,
+    deleteProductController,
+    updateMainImageController,
+    createProductCategory,
+    getProductCategory,
+    getAllDeletedProductsController
+}

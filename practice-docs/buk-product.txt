@@ -1,0 +1,58 @@
+
+=== 1 ===
+
+write this: 
+const {readSheet}  = require('read-excel-file/node');
+const data = await readSheet("./uploads/products/1789980504725-572813994-demo product spreadsheet.xlsx");
+    console.log(data, 'full bulk e ki ase...')
+
+  or 
+
+  const data = await readSheet(`././${req.file.path}`); // result dynamic the same...
+
+RESULT:
+
+[
+  [ 'Name', 'Slug', 'Image URL', 'Description' ],
+  [
+    'Wireless Bluetooth Headphones',
+    'wireless-bluetooth-headphones',
+    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e',
+    'High-quality wireless Bluetooth headphones with clear sound, comfortable ear cushions, and long battery life.'
+  ],
+  [
+    'Smart LED Desk Lamp',
+    'smart-led-desk-lamp',
+    'https://images.unsplash.com/photo-1507473885765-e6ed057f782c',
+    'Modern LED desk lamp with adjustable brightness, flexible positioning, and an energy-efficient design.'
+  ],
+  [
+    'Mechanical Gaming Keyboard',
+    'mechanical-gaming-keyboard',
+    'https://images.unsplash.com/photo-1587829741301-dc798b83add3',
+    'Durable mechanical gaming keyboard with responsive keys, ergonomic design, and RGB-style gaming aesthetics.'
+  ],
+  [
+    'Portable Bluetooth Speaker',
+    'portable-bluetooth-speaker',
+    'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1',
+    'Compact portable Bluetooth speaker delivering powerful audio with a rechargeable battery for everyday use.'
+  ],
+  [
+    'USB-C Fast Charger',
+    'usb-c-fast-charger',
+    'https://images.unsplash.com/photo-1583863788434-e58a36330cf0',
+    'Compact USB-C fast charger designed for smartphones, tablets, and other compatible electronic devices.'
+  ]
+] full bulk e ki ase...
+
+
+
+=== 2 ====
+
+=== error ===
+TypeError: Cannot read properties of undefined (reading 'length')
+    at bulkCreateProductController (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/src/controllers/productController.js:46:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+    === unsolved ===
