@@ -38,6 +38,75 @@ const bulkCreateProductController = async (req, res) => {
       });
     }
 
+      // category validation kortese... Manually Category create korle aita rakha jabe
+      // এটা Excel থেকে unique category names বের করছে। Set duplicate বাদ দিচ্ছে।
+    //   const excelCategories = [
+    //       ...new Set(
+    //           objects.filter((item) => item !== null).map((item) => item.category?.trim()).filter(Boolean)
+    //       ),
+    //   ];
+      // তারপর DB-তে ওই category আছে কিনা খুঁজছে...
+    //   const existingCategories = await Category.find({
+    //       catTitle: { $in: excelCategories },
+          
+    //   }).select("catTitle");
+
+      // শুধু category নামগুলো বের করছে.. MAP kore...
+    //   const existingCategoryNames = existingCategories.map(
+    //       (category) => category.catTitle
+    //   );
+      // কোনগুলো Category name missing সেটা বের করছে...
+    //   const missingCategories = excelCategories.filter(
+    //       (category) => !existingCategoryNames.includes(category)
+    //   );
+
+      // Missing category থাকলে Product insert করবে না...
+    //   if (missingCategories.length > 0) {
+    //       return res.status(400).json({
+    //           success: false,
+    //           message: 'Some product categories do not exists...',
+    //           missingCategories,
+    //       });
+      //   };
+      
+
+      // ===============================
+        // AUTO CREATE PRODUCT CATEGORIES
+     // ===============================
+
+        const excelCategories = [
+            ...new Set(
+                objects
+                .filter((item) => item !== null)
+                .map((item) => item.category?.trim())
+                .filter(Boolean)
+            ),
+            ];
+
+        for (const categoryName of excelCategories) {
+            const existingCategory = await Category.findOne({
+                catTitle: categoryName,
+            });
+
+        if (!existingCategory) {
+            const slug = categoryName
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+
+            await Category.create({
+                catTitle: categoryName,
+                slug: slug,
+                status: "active",
+                description: "",
+                image: "",
+            });
+
+                console.log(`Category created: ${categoryName}`);
+            }
+        };
+
     // Convert Excel data to Product schema
     const products = objects.filter((item) => item !== null).map((item) => ({
         // ...item,
@@ -113,49 +182,6 @@ const bulkCreateProductController = async (req, res) => {
     });
   }
 };
-
-
-
-// const bulkCreateProductController = async (req, res) => {
-//     console.log(req.file, 'bulk create product check:...');
-//     // readExcelFile("../uploads/products/1789966942604-400972788-demo product spreadsheet.xlsx", { trim: false })
-//     // const data = await readSheet(`././${req.file.path}`);
-//     // console.log(data, 'full bulk e ki ase...')
-    
-   
-//     const { objects, errors } = await readSheet(
-//         `././${req.file.path}`,
-//         {schema: productImportSchema, }
-//     );
-//     // console.log(objects, 'product import objects ki ase: Array astese...');
-//     console.log(errors, 'product import errors ki ase:...');
-
-//     // Excel থেকে কোনো valid data না পেলে - AI
-//     if (!objects || objects.length === 0) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "No product data found in Excel file",
-//         errors,
-//       });
-//     }
-
-//     // Object kore data pathate use hoyrche...
-//     // objects.map((item) => {
-//     //     console.log(item.name, 'Array k object kore nilam...');
-//     // });
-
-//     // Excel objects directly MongoDB তে insert
-//     const insertedProducts = await Product.insertMany(objects);
-
-//     return res.status(201).json({
-//       success: true,
-//       message: "Products imported successfully",
-//       count: insertedProducts.length,
-//       products: insertedProducts,
-//     });
-
-    
-// };
 
 
 const createProductController = async (req, res) => {
