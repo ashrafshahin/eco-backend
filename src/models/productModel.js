@@ -15,6 +15,10 @@ const productSchema = new Schema({
         trim: true,
         lowercase: true,
     },
+    previousSlugs: {
+        type: [String],
+        default: [],
+    },
     sku: {
         type: String,
         unique: true,

@@ -19,7 +19,7 @@ app.use('/uploads/products', express.static(path.join(__dirname, 'uploads/produc
 const { registrationController, loginController, forgotPasswordController, resetPasswordController, resendVerificationEmailController, verifyEmailController } = require('./src/controllers/authController');
 const { registrationLimiter, loginLimiter, forgotPasswordLimiter, resetPasswordLimiter, resendVerificationEmailLimiter, varificationEmailLimiter } = require('./src/utils/limiter');
 const { deleteDataController, updateUserDataController, getAllUsersController, singleUserDataController, getAllDeleteUsersController, getAllActiveUsersController, getSearchDataController } = require('./src/controllers/userController');
-const { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController, createProductCategory, getProductCategory, getAllDeletedProductsController, bulkCreateProductController } = require('./src/controllers/productController');
+const { createProductController, getAllProductsController, getSingleProductController, updateProductController, deleteProductController, updateMainImageController, createProductCategory, getProductCategory, getAllDeletedProductsController, bulkCreateProductController, getProductBySlugController, getSingleProductBySlugController } = require('./src/controllers/productController');
 const { createCartController, cartProductIncreDecreController, cartProductDeleteController, getCartProductController } = require('./src/controllers/cartController');
 const { paymentController } = require('./src/controllers/paymentController');
 
@@ -50,6 +50,8 @@ app.delete('/delete-product/:id', deleteProductController);
 app.post('/create-category', createProductCategory);
 app.get('/get-category', getProductCategory);
 app.get('/get-deleted-products', getAllDeletedProductsController);
+app.get('/product/:slug', getProductBySlugController);
+app.get('/get-single-product-by-slug/:slug', getSingleProductBySlugController);
 
 // Cart management
 app.post('/create-cart/:userId', createCartController);

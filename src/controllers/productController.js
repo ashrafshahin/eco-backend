@@ -38,42 +38,12 @@ const bulkCreateProductController = async (req, res) => {
       });
     }
 
-      // category validation kortese... Manually Category create korle aita rakha jabe
-      // এটা Excel থেকে unique category names বের করছে। Set duplicate বাদ দিচ্ছে।
-    //   const excelCategories = [
-    //       ...new Set(
-    //           objects.filter((item) => item !== null).map((item) => item.category?.trim()).filter(Boolean)
-    //       ),
-    //   ];
-      // তারপর DB-তে ওই category আছে কিনা খুঁজছে...
-    //   const existingCategories = await Category.find({
-    //       catTitle: { $in: excelCategories },
-          
-    //   }).select("catTitle");
-
-      // শুধু category নামগুলো বের করছে.. MAP kore...
-    //   const existingCategoryNames = existingCategories.map(
-    //       (category) => category.catTitle
-    //   );
-      // কোনগুলো Category name missing সেটা বের করছে...
-    //   const missingCategories = excelCategories.filter(
-    //       (category) => !existingCategoryNames.includes(category)
-    //   );
-
-      // Missing category থাকলে Product insert করবে না...
-    //   if (missingCategories.length > 0) {
-    //       return res.status(400).json({
-    //           success: false,
-    //           message: 'Some product categories do not exists...',
-    //           missingCategories,
-    //       });
-      //   };
-      
 
       // ===============================
         // AUTO CREATE PRODUCT CATEGORIES
      // ===============================
 
+      // এটা Excel থেকে unique category names বের করছে। Set duplicate বাদ দিচ্ছে।
         const excelCategories = [
             ...new Set(
                 objects
@@ -83,6 +53,7 @@ const bulkCreateProductController = async (req, res) => {
             ),
             ];
 
+      // তারপর DB-তে ওই category আছে কিনা খুঁজছে...
         for (const categoryName of excelCategories) {
             const existingCategory = await Category.findOne({
                 catTitle: categoryName,
@@ -218,6 +189,9 @@ const createProductController = async (req, res) => {
         // custom SKU create korbe
         const sku = `Eco${new Date().getFullYear()}-${Date.now().toString().slice(-5)}-${Math.floor(100 + Math.random() * 900)}`;
 
+        // Slug added ...
+        const slug = title.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
+
 
         const existingSku = await Product.findOne({ sku });
         if (existingSku) {
@@ -285,13 +259,25 @@ const createProductController = async (req, res) => {
                 success: false,
                 message: 'End date must be greater than or equal to start date...',
             });
-        }
+        };
+
+        // Tags error solving...
+        const formattedTags = Array.isArray(tags)
+            ? tags.map((tag) => tag.trim()).filter(Boolean)
+            : typeof tags === "string"
+                ? tags.split(",").map((tag) => tag.trim()).filter(Boolean)
+                : [];
+        
+        console.log("TITLE:", title);
+        console.log("TAGS:", tags);
+        console.log("SLUG:", slug);
 
         const newProduct = new Product({
             ...req.body,
-            tags: tags.split(','),
+            tags: formattedTags,
             sku: sku,
             images: images,
+            slug: slug,
             
         });
 
@@ -420,7 +406,8 @@ const getSingleProductController = async (req, res) => {
 
 const updateProductController = async (req, res) => {
     try {
-        const { id } = req.params
+        const { id } = req.params;
+        const { title } = req.body;
         const existingProduct = await Product.findById(id);
         if (!existingProduct) {
             return res.status(404).json({
@@ -428,9 +415,29 @@ const updateProductController = async (req, res) => {
                 message: 'Product not found...'
             });
         };
+
+        //new slug create hobe + OLD slug redirect hobe SEO thik thakbe
+        let slug = existingProduct.slug;
+        let previousSlugs = existingProduct.previousSlugs || [];
+
+        if (title && title.trim() !== existingProduct.title) {
+            slug = title
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9\s-]/g, "")
+                .replace(/\s+/g, "-")
+                .replace(/-+/g, "-");
+
+        if (existingProduct.slug && existingProduct.slug !== slug && !previousSlugs.includes(existingProduct.slug)
+            ) {
+                previousSlugs.push(existingProduct.slug);
+            }
+        };
     
         const product = await Product.findByIdAndUpdate(
-            id, req.body, { returnDocument: "after", runValidators: true },
+            id,
+            { ...req.body, slug, previousSlugs },
+            { returnDocument: "after", runValidators: true },
         );
 
         // new Image upload + isMain image age ja ase false kore new isMain true korchi...
@@ -575,6 +582,87 @@ const updateMainImageController = async (req, res) => {
     }
 };
 
+const getProductBySlugController = async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        const product = await Product.findOne({ slug });
+
+        if (product) {
+            return res.status(200).json({
+                success: true,
+                product,
+            });
+        };
+
+        const oldSlugProduct = await Product.findOne({previousSlugs: slug,});
+
+        if (oldSlugProduct) {
+            return res.status(301).json({
+                success: true,
+                redirect: true,
+                newSlug: oldSlugProduct.slug,
+            });
+        }
+
+        return res.status(404).json({
+            success: false,
+            message: "Product not found...",
+        });
+
+    } catch (error) {
+        console.log(error, "Get product by slug error...");
+
+        return res.status(500).json({
+            success: false,
+            message: "Get product by Slug Server error...",
+        });
+    }
+};
+
+const getSingleProductBySlugController = async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        // First check current slug
+        const product = await Product.findOne({ slug });
+
+        if (product) {
+            return res.status(200).json({
+                success: true,
+                redirect: false,
+                product,
+            });
+        }
+
+        // If current slug not found, check old slugs
+        const oldSlugProduct = await Product.findOne({
+            previousSlugs: slug,
+        });
+
+        if (oldSlugProduct) {
+            return res.status(200).json({
+                success: true,
+                redirect: true,
+                newSlug: oldSlugProduct.slug,
+                product: oldSlugProduct,
+            });
+        }
+
+        return res.status(404).json({
+            success: false,
+            message: "Product not found...",
+        });
+
+    } catch (error) {
+        console.log(error, "Get single Product by slug error...");
+
+        return res.status(500).json({
+            success: false,
+            message: "Server error...",
+        });
+    }
+};
 
 module.exports = {
     createProductController,
@@ -586,5 +674,7 @@ module.exports = {
     updateMainImageController,
     createProductCategory,
     getProductCategory,
-    getAllDeletedProductsController
+    getAllDeletedProductsController,
+    getProductBySlugController,
+    getSingleProductBySlugController,
 }

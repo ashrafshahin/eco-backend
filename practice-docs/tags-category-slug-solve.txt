@@ -1,0 +1,38 @@
+
+
+SLUG: done
+1. new slug add hobe add product korle...
+2. Product title edit korle updated slug create hobe...
+3. old and new slug REDIRECT korte hobe jate SEO thik thake...
+    i. previous slug database array te asche
+    ii. previous slug e product search korle redirect hobe new url e
+    iii. ID + slug deye product search kora and SEO link astese
+
+
+
+Tags: done
+1. Split error hoise... formatedTags solved that
+2. Delete tag kaj korche
+
+
+
+
+Categories: done
+1. Excel theke - Bulk product upload korleo new categories create korbe Automatically...
+2. Duplicate check korbe
+
+Not done - need mentor help:
+3. Update Category from edit page  ????
+
+
+
+
+
+
+title is not defined , i gave const { title } = req.body; but now it says ecoBazaar database connected...
+
+TypeError: Assignment to constant variable.
+
+    at updateProductController (/Users/Shalhizan/Desktop/backend-works/ecobazaar-backend/src/controllers/productController.js:421:18)
+
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) Update Product related error...
